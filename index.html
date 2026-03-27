@@ -110,7 +110,7 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
   border:1px solid rgba(255,255,255,0.10);
   border-radius:10px;
   box-shadow:0 16px 48px rgba(0,0,0,0.7);
-  z-index:600;
+  z-index:2500;
   overflow:hidden;
   opacity:0;visibility:hidden;
   transform:translateY(-8px);
@@ -456,10 +456,10 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 .abar-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
 .abar-label{font-family:var(--serif);font-size:13px;font-weight:400;color:rgba(255,252,245,0.92);}
 .abar-sub{font-family:var(--mono);font-size:6.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,0.32);}
-.abar-btn:nth-child(1):hover .abar-label{color:#c8864a;}
-.abar-btn:nth-child(3):hover .abar-label{color:#a78bd4;}
-.abar-btn:nth-child(5):hover .abar-label{color:#7dab7a;}
-.abar-btn:nth-child(7):hover .abar-label{color:#6aa3d4;}
+.abar-btn:nth-child(1):hover .abar-label{color:#7dcecc;}
+.abar-btn:nth-child(3):hover .abar-label{color:#c8864a;}
+.abar-btn:nth-child(5):hover .abar-label{color:#a78bd4;}
+.abar-btn:nth-child(7):hover .abar-label{color:#7dab7a;}
 .abar-sep{width:1px;background:rgba(255,255,255,0.08);margin:10px 0;flex-shrink:0;}
 
 /* ── BACKDROP ─────────────────────────────────────────── */
@@ -725,11 +725,38 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
   .panel-section { padding:22px 24px; }
   .p-quote { font-size:16px; }
 
-  /* Action bar — icon only on mobile */
-  #action-bar { padding:10px 10px; gap:2px; flex-wrap:wrap; justify-content:center; }
-  .abar-label { font-size:11px; }
-  .abar-sub { display:none; }
-  .abar-btn { padding:8px 10px; }
+  /* Action bar — 2x2 grid on mobile */
+  #action-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0;
+    gap: 0;
+    border-radius: 16px;
+    width: calc(100vw - 32px);
+    max-width: 360px;
+    bottom: 16px;
+    overflow: hidden;
+  }
+  .abar-sep { display: none; }
+  .abar-btn {
+    flex: 0 0 50%;
+    width: 50%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-sizing: border-box;
+  }
+  .abar-btn:nth-child(1) { border-right: 1px solid rgba(255,255,255,0.06); }
+  .abar-btn:nth-child(3) { border-right: 1px solid rgba(255,255,255,0.06); }
+  .abar-btn:nth-child(5) { border-right: 1px solid rgba(255,255,255,0.06); border-bottom: none; }
+  .abar-btn:nth-child(7) { border-bottom: none; }
+  .abar-ico { font-size: 18px; flex-shrink: 0; }
+  .abar-label { font-size: 11px; letter-spacing: .04em; text-align: left; }
+  .abar-sub { display: none; }
 
   /* HUD — slim */
   #hud { padding:0 16px; height:40px; }
@@ -1141,6 +1168,17 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 <!-- OVERLAYS -->
 <div id="deck-backdrop"></div>
 
+<!-- SELECTED WORK DECK -->
+<div id="work-deck" class="card-deck">
+  <div class="deck-header">
+    <div class="deck-title"><em>Selected</em> Work</div>
+    <div class="deck-sub">Case studies &amp; writing</div>
+    <button class="deck-close" onclick="closeDeck('work-deck')">✕</button>
+  </div>
+  <div class="deck-cards" id="work-cards"><div class="deck-count" id="work-count">3</div></div>
+  <div class="deck-hint">Tap View to open · Swipe to browse</div>
+</div>
+
 <!-- CHARCHE DECK -->
 <div id="charche-deck" class="card-deck">
   <div class="deck-header">
@@ -1175,6 +1213,14 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 </div>
 
 <div id="action-bar" style="opacity:0;">
+  <button class="abar-btn" onclick="openWork()">
+    <span class="abar-ico">🗂️</span>
+    <div class="abar-text">
+      <span class="abar-label">Selected Work</span>
+      <span class="abar-sub">Case studies &amp; writing</span>
+    </div>
+  </button>
+  <div class="abar-sep"></div>
   <button class="abar-btn" onclick="openCharche()">
     <span class="abar-ico">🍵</span>
     <div class="abar-text">
@@ -1203,6 +1249,37 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ── DECK DATA ────────────────────────────────────────────────────────────
+// ── SELECTED WORK DATA ───────────────────────────────────────────────────
+var work_data = [
+  {
+    ico: '💼',
+    type: 'case-study',
+    co: 'Axis Bank · Freecharge',
+    title: 'Reimagining the Mutual Fund Experience for Confident Investing',
+    desc: 'Turning a cluttered discovery flow into a calm, confidence-first investing journey — from zero to a product 240M users could trust.',
+    tags: ['UX Strategy', 'Fintech', 'Mobile'],
+    link: 'https://www.notion.so/Reimagining-the-Mutual-Fund-Experience-for-Confident-Investing-2e81cde08e7080cfbbbeeaad5fd4e1b5'
+  },
+  {
+    ico: '📈',
+    type: 'case-study',
+    co: 'Ventura Securities · 2025',
+    title: 'Strategy Builder',
+    desc: 'Designing a visual options strategy tool for active traders — making complex derivatives approachable without dumbing them down.',
+    tags: ['Product Design', 'Wealth Tech', 'Trading'],
+    link: 'https://www.notion.so/Ventura-Strategy-Builder-2fd1cde08e708048a1f7c727971c1845'
+  },
+  {
+    ico: '✍️',
+    type: 'article',
+    co: 'Medium · @chirragk',
+    title: 'Read on Medium',
+    desc: 'Thoughts on design craft, product thinking, and lessons from a decade of building financial products in Mumbai.',
+    tags: ['Writing', 'Design thinking'],
+    link: 'https://chirragk.medium.com/'
+  },
+];
+
 var charche_data = [
   {ico:'📚', cat:'Book', title:'The Design of Everyday Things', body:'Don Norman changed how I see doors. Literally. If you work in product, this is not optional.'},
   {ico:'🎙️', cat:'Podcast', title:'How I Built This — Guy Raz', body:'Every founder story is a masterclass in persistence. Eastern Express commute approved.'},
@@ -1368,6 +1445,10 @@ function openCombined() {
   buildDeck('charche-deck','charche-cards',combined,'combined');
   showDeck('charche-deck');
 }
+function openWork() {
+  buildDeck('work-deck','work-cards',work_data,'work');
+  showDeck('work-deck');
+}
 function openCharche(){
   buildDeck('charche-deck','charche-cards',reco_data,'charche');
   showDeck('charche-deck');
@@ -1485,6 +1566,26 @@ function buildDeck(deckId, cardsId, data, type) {
           '<div class="mc-tags" style="margin-top:auto">'+d.tags.map(function(t){return'<span class="mc-tag">'+t+'</span>';}).join('')+'</div>' +
           '<div class="cc-next" onclick="nextCardSwipe(event,\''+deckId+'\')">Next →</div>' +
         '</div>';
+    } else if(type==='work') {
+      card.dataset.noflip = '1';
+      card.innerHTML =
+        '<div class="card-face card-front" style="justify-content:space-between;padding:28px 26px;">' +
+          '<div style="display:flex;flex-direction:column;gap:0;flex:1;min-height:0;">' +
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">' +
+              '<span style="font-size:22px;line-height:1;">' + d.ico + '</span>' +
+              '<span style="font-family:var(--mono);font-size:7px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);">' + (d.type==="article" ? "Article" : "Case Study") + '</span>' +
+            '</div>' +
+            '<div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,0.38);margin-bottom:8px;">' + d.co + '</div>' +
+            '<div style="font-family:var(--serif);font-size:clamp(17px,1.6vw,21px);font-weight:400;line-height:1.35;color:rgba(255,252,245,0.95);margin-bottom:12px;">' + d.title + '</div>' +
+            '<div style="font-family:var(--sans);font-size:12px;line-height:1.65;color:rgba(232,224,208,0.55);flex:1;">' + d.desc + '</div>' +
+          '</div>' +
+          '<div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:14px;margin-top:14px;display:flex;align-items:center;justify-content:space-between;">' +
+            '<div style="display:flex;flex-wrap:wrap;gap:4px;">' +
+              d.tags.map(function(t){return '<span style="padding:2px 9px;border:1px solid rgba(255,255,255,0.07);border-radius:20px;font-family:var(--mono);font-size:6px;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,224,208,0.32);">'+t+'</span>';}).join('') +
+            '</div>' +
+            '<a href="' + d.link + '" target="_blank" onclick="event.stopPropagation();" style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;white-space:nowrap;padding:6px 12px;border:1px solid rgba(200,134,74,0.35);border-radius:20px;">View →</a>' +
+          '</div>' +
+        '</div>';
     } else {
       card.innerHTML =
         '<div class="card-face card-front">' +
@@ -1502,10 +1603,11 @@ function buildDeck(deckId, cardsId, data, type) {
     // Click to flip top card only
     card.addEventListener('click', function(e) {
       if(e.target.classList.contains('cc-next')) return;
+      if(e.target.closest('a')) return;
+      if(card.dataset.noflip) return;
       var topCards = container.querySelectorAll('.flip-card:not(.swiping-left)');
       if(topCards.length > 0 && topCards[0] === card) card.classList.toggle('flipped');
     });
-    // Drag-to-swipe
     addDragSwipe(card, deckId, container);
     container.appendChild(card);
   });
@@ -1597,7 +1699,7 @@ function addDragSwipe(card, deckId, container) {
 
 function nextCardSwipe(e, deckId) {
   if(e) e.stopPropagation();
-  var cid = deckId==='charche-deck'?'charche-cards':deckId==='edu-deck'?'edu-cards':'memory-cards';
+  var cid = deckId==='charche-deck'?'charche-cards':deckId==='edu-deck'?'edu-cards':deckId==='work-deck'?'work-cards':'memory-cards';
   var container = document.getElementById(cid);
   var cards = container.querySelectorAll('.flip-card:not(.swiping-left)');
   if(!cards.length) return;
@@ -1614,7 +1716,7 @@ function nextCardSwipe(e, deckId) {
 }
 function nextCard(deckId) { nextCardSwipe(null, deckId); }
 function prevCard(deckId) {
-  var cid = deckId==='charche-deck'?'charche-cards':deckId==='edu-deck'?'edu-cards':'memory-cards';
+  var cid = deckId==='charche-deck'?'charche-cards':deckId==='edu-deck'?'edu-cards':deckId==='work-deck'?'work-cards':'memory-cards';
   var container = document.getElementById(cid);
   var cards = container.querySelectorAll('.flip-card');
   if(!cards.length) return;
@@ -1841,6 +1943,14 @@ let profileCardOpen = false;
 function toggleProfileCard(){
   profileCardOpen = !profileCardOpen;
   document.getElementById('profile-card').classList.toggle('open', profileCardOpen);
+  // On mobile: hide action-bar when profile card is open
+  if(window.innerWidth <= 768) {
+    var ab = document.getElementById('action-bar');
+    if(ab) {
+      ab.style.opacity = profileCardOpen ? '0' : (introGone ? '1' : '0');
+      ab.style.pointerEvents = profileCardOpen ? 'none' : (introGone ? 'all' : 'none');
+    }
+  }
 }
 // Close on outside click
 document.addEventListener('click', e => {
@@ -1849,6 +1959,11 @@ document.addEventListener('click', e => {
      !e.target.closest('#profile-card')){
     profileCardOpen = false;
     document.getElementById('profile-card').classList.remove('open');
+    // Restore action-bar on mobile
+    if(window.innerWidth <= 768 && introGone) {
+      var ab = document.getElementById('action-bar');
+      if(ab){ ab.style.opacity='1'; ab.style.pointerEvents='all'; }
+    }
   }
 });
 
