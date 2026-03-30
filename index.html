@@ -759,8 +759,8 @@ a.proj-link .proj-body { pointer-events:none; }
     background: transparent;
     transition: background 0.2s;
   }
-  .abar-btn:nth-child(2n) { border-right: none; }
-  .abar-btn:nth-last-child(-n+2) { border-bottom: none; }
+  .abar-btn:nth-of-type(2n) { border-right: none; }
+  .abar-btn:nth-of-type(3), .abar-btn:nth-of-type(4) { border-bottom: none; }
   .abar-btn:hover, .abar-btn:active { background: rgba(200,134,74,0.08); }
   .abar-ico { font-size: 20px; flex-shrink: 0; line-height: 1; }
   .abar-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
@@ -1784,7 +1784,7 @@ const locs = [
     quote:'"Design teaches you to observe. Fatherhood teaches you why it matters."',
     stats:[{num:'1',label:'Kid'},{num:'∞',label:'Chai cups'}],
     day:[{t:'Evening',a:'Reach home, take care of the baby',n:'Switch off from work. Most important part of the day.'},{t:'Weekends',a:'Baby duty, then the mall',n:'Observe how families navigate spaces. Unintentional UX research.'},{t:'Holidays',a:'Full-time dad',n:'No half-measures. Baby gets everything.'},{t:'Late nights',a:'Read articles when there is time',n:'Design, fintech, product — whatever caught my eye during the week.'},{t:'Always',a:'Observe people everywhere',n:'Malls, commutes, queues — watching how people behave is the real brief.'}],
-    projects:[{title:'Father · Home',year:'Ongoing',desc:'[Placeholder] A personal note about family life and what fatherhood has taught him about design and empathy.',tags:['Family','Life','Empathy']},{title:'Personal Design Practice',year:'2020–',desc:'[Placeholder] Side projects and explorations done from home.',tags:['Side projects','Exploration']}]
+    projects:[{title:'Father · Home',year:'Ongoing',desc:'Being a father sharpened my eye for what really matters in design — patience, observation, and building things that quietly work for people who never asked for instructions.',tags:['Family','Life','Empathy']},{title:'Personal Design Practice',year:'2020–',desc:'Side explorations in type, interfaces, and ideas that don\'t fit a brief — a space to stay curious outside of client work.',tags:['Side projects','Exploration']}]
   },
   { id:'dadar', name:'Axis Bank–Freecharge', sub:'Dadar · Mar 2021 – Dec 2024', type:'work', color:'#6aa3d4', icon:'🏦', lat:19.0178, lng:72.8478,
     quote:'"Banking at scale is humbling. Every decision touches 240 million people."',
@@ -1861,7 +1861,7 @@ locs.forEach(loc=>{
   m.on('mouseover',e=>showTooltip(loc,e.originalEvent));
   m.on('mousemove',e=>moveTooltip(e.originalEvent));
   m.on('mouseout',()=>hideTooltip());
-  m.on('click',()=>handlePinClick(loc));
+  m.on('click',(e)=>{L.DomEvent.stopPropagation(e);if(e.originalEvent){e.originalEvent._fromPin=true;}handlePinClick(loc);});
   pinMarkers[loc.id]=m;
 });
 
@@ -1922,7 +1922,7 @@ function closePanel(){document.getElementById('panel').classList.remove('open');
 function navPin(dir){if(driving)return;const idx=locs.findIndex(l=>l.id===(currentPanelLoc||currentLoc||locs[0]).id);handlePinClick(locs[(idx+dir+locs.length)%locs.length]);}
 
 // keydown handled below
-document.getElementById('map').addEventListener('click',()=>{if(panelOpen)closePanel();});
+document.getElementById('map').addEventListener('click',(e)=>{if(e._fromPin)return;if(panelOpen)closePanel();});
 
 function setTime(t){curTime=t;const cfg=timeCfg[t];document.getElementById('time-overlay').style.background=cfg.overlay;const sky=document.getElementById('sky');sky.style.background=cfg.sky;sky.style.opacity=cfg.skyOpacity;document.getElementById('vignette').style.background=cfg.vignette;document.getElementById('ghost').textContent=cfg.ghost;document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));styleTiles();showModeToast(cfg);}
 function showModeToast(cfg){const t=document.getElementById('mode-toast');t.innerHTML=`<span class="toast-ico">${cfg.toastIco}</span><span class="toast-label">${cfg.toastLabel}</span><span class="toast-sub">— ${cfg.toastSub}</span>`;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800);}
