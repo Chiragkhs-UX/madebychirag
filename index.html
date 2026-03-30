@@ -1020,6 +1020,190 @@ a.proj-link .proj-body { pointer-events:none; }
   #enter-btn { padding:9px 20px; }
   #action-bar { bottom:52px; }
 }
+
+/* ── IDLE HINT — chat bubble ─────────────────────────── */
+@keyframes bubblePop {
+  0%   { opacity:0; transform:translate(20px,-50%) scale(0.72); }
+  55%  { transform:translate(20px,-50%) scale(1.04); }
+  100% { opacity:1; transform:translate(20px,-50%) scale(1); }
+}
+@keyframes bubbleHide {
+  to   { opacity:0; transform:translate(20px,-50%) scale(0.88); }
+}
+#iam-idle-hint {
+  position:fixed;
+  z-index:1800;pointer-events:none;
+  opacity:0;
+  transform:translate(20px,-50%);
+  white-space:nowrap;
+}
+#iam-idle-hint.show  { animation:bubblePop .38s cubic-bezier(.34,1.56,.64,1) forwards; }
+#iam-idle-hint.hide  { animation:bubbleHide .22s ease forwards; }
+
+.iam-hint-inner {
+  display:flex;flex-direction:column;gap:6px;
+  padding:11px 16px 10px;
+  background:rgba(32,29,26,0.96);
+  border:1px solid rgba(200,134,74,0.22);
+  border-radius:16px 16px 16px 4px; /* chat bubble tail bottom-left */
+  box-shadow:0 8px 32px rgba(0,0,0,0.55), 0 0 0 0.5px rgba(200,134,74,0.08);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+/* tiny avatar dot — mimics "sender" */
+.iam-hint-avatar {
+  position:absolute;
+  left:-10px;bottom:-6px;
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 2px rgba(32,29,26,0.96);
+}
+.iam-hint-prompt {
+  font-family:var(--serif);font-style:italic;
+  font-size:14px;color:rgba(255,252,245,0.82);
+  line-height:1.45;
+}
+.iam-hint-cta {
+  font-family:var(--mono);font-size:7.5px;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(200,134,74,0.65);
+  display:flex;align-items:center;gap:6px;
+}
+.iam-hint-cta::before {
+  content:'';width:10px;height:1px;
+  background:rgba(200,134,74,0.3);flex-shrink:0;
+}
+
+/* Long-press ring around cursor */
+#iam-press-ring {
+  position:fixed;pointer-events:none;z-index:99997;
+  width:48px;height:48px;border-radius:50%;
+  border:1.5px solid rgba(200,134,74,0);
+  transform:translate(-50%,-50%) scale(0.4);
+  transition:border-color 0s, transform 0s;
+  top:0;left:0;
+}
+#iam-press-ring.charging {
+  border-color:rgba(200,134,74,0.6);
+  transform:translate(-50%,-50%) scale(1);
+  transition:border-color .1s ease, transform var(--press-dur, 700ms) cubic-bezier(.4,0,.2,1);
+}
+
+/* ── I AM OVERLAY ────────────────────────────────────── */
+#iam-overlay {
+  position:fixed;inset:0;z-index:2200;
+  background:rgba(24,22,20,0.97);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:48px 24px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .5s cubic-bezier(.16,1,.3,1), visibility .5s;
+}
+#iam-overlay.show {
+  opacity:1;visibility:visible;pointer-events:all;
+}
+#iam-overlay::before {
+  content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(232,224,208,0.018) 79px,rgba(232,224,208,0.018) 80px);
+  pointer-events:none;
+}
+#iam-inner {
+  position:relative;width:100%;max-width:680px;
+}
+#iam-close {
+  position:absolute;top:-8px;right:0;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  color:rgba(232,224,208,0.5);font-size:12px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .18s,color .18s;z-index:10;
+}
+#iam-close:hover { background:rgba(255,255,255,0.13);color:rgba(255,252,245,0.9); }
+
+.iam-heading {
+  font-family:var(--serif);font-size:clamp(38px,5vw,56px);
+  font-weight:300;color:rgba(255,252,245,0.92);
+  letter-spacing:-.02em;line-height:1;margin-bottom:20px;
+}
+.iam-heading em { font-style:italic;color:var(--accent); }
+
+.iam-toggle-row {
+  display:flex;align-items:center;gap:12px;margin-bottom:48px;
+}
+.iam-lbl {
+  font-family:var(--mono);font-size:9px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(232,224,208,0.25);
+  transition:color .3s;
+}
+.iam-lbl.active { color:rgba(232,224,208,0.8); }
+.iam-pill {
+  width:50px;height:26px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:13px;cursor:pointer;position:relative;
+  transition:border-color .3s;flex-shrink:0;
+}
+.iam-pill:hover { border-color:rgba(200,134,74,0.5); }
+.iam-thumb {
+  width:18px;height:18px;background:var(--accent);border-radius:50%;
+  position:absolute;top:3px;left:3px;
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+}
+.iam-pill.now .iam-thumb { transform:translateX(24px); }
+
+/* Journey state — scattered */
+.iam-journey { position:relative; }
+.iam-journey.hidden { display:none; }
+.iam-block {
+  max-width:420px;
+  margin-bottom:36px;
+}
+.iam-block:last-child { margin-bottom:0; }
+.iam-block:nth-child(2) { margin-left:clamp(32px,6vw,80px); }
+.iam-block:nth-child(3) { margin-left:clamp(64px,12vw,160px); }
+.iam-dot {
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);opacity:.65;margin-bottom:10px;
+}
+.iam-block p {
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(15px,1.6vw,18px);
+  line-height:1.82;color:rgba(232,224,208,0.62);
+}
+
+/* Now state */
+.iam-now { display:none; }
+.iam-now.visible { display:flex;flex-direction:column;gap:28px; }
+.iam-now-para {
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(15px,1.6vw,18px);line-height:1.82;
+  color:rgba(232,224,208,0.62);
+  padding-left:20px;
+  border-left:1.5px solid rgba(200,134,74,0.3);
+  max-width:520px;
+}
+.iam-now-para:nth-child(2) { margin-left:clamp(32px,5vw,60px); }
+.iam-now-para:nth-child(3) { margin-left:clamp(64px,10vw,120px); }
+.iam-now-para em { color:var(--accent);font-style:normal; }
+
+.iam-esc-hint {
+  margin-top:52px;
+  font-family:var(--mono);font-size:8px;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(232,224,208,0.18);
+  display:flex;align-items:center;gap:8px;
+}
+.iam-esc-key {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:28px;height:18px;border:1px solid rgba(232,224,208,0.15);
+  border-radius:3px;font-size:8px;color:rgba(232,224,208,0.25);
+}
+
+@media (max-width:768px) {
+  .iam-block:nth-child(2) { margin-left:20px; }
+  .iam-block:nth-child(3) { margin-left:40px; }
+  .iam-now-para:nth-child(2) { margin-left:20px; }
+  .iam-now-para:nth-child(3) { margin-left:40px; }
+  #iam-idle-hint { bottom:120px; font-size:8px; }
+}
 </style>
 </head>
 <body>
@@ -1185,6 +1369,63 @@ a.proj-link .proj-body { pointer-events:none; }
 
 <!-- OVERLAYS -->
 <div id="deck-backdrop"></div>
+
+<!-- IDLE HINT -->
+<div id="iam-idle-hint">
+  <div class="iam-hint-inner" style="position:relative;">
+    <div class="iam-hint-avatar"></div>
+    <div class="iam-hint-prompt" id="iam-hint-text"></div>
+    <div class="iam-hint-cta">hold anywhere to know me</div>
+  </div>
+</div>
+<div id="iam-press-ring"></div>
+
+<!-- I AM OVERLAY -->
+<div id="iam-overlay">
+  <div id="iam-inner">
+    <button id="iam-close" onclick="closeIam()">✕</button>
+    <div class="iam-heading">I <em>am?</em></div>
+
+    <div class="iam-toggle-row">
+      <span class="iam-lbl active" id="iam-lbl-then">Then</span>
+      <div class="iam-pill" id="iam-pill" onclick="iamFlip()">
+        <div class="iam-thumb"></div>
+      </div>
+      <span class="iam-lbl" id="iam-lbl-now">Now</span>
+    </div>
+
+    <div class="iam-journey" id="iam-journey">
+      <div class="iam-block">
+        <div class="iam-dot"></div>
+        <p>I was the kid in the last bench who found better things to do than study. My dad ran out of patience and sent me to a hostel — probably his best decision on my behalf.</p>
+      </div>
+      <div class="iam-block">
+        <div class="iam-dot"></div>
+        <p>Living alone at that age does something to you. I started observing people — quietly, carefully. How they talked, what they wanted, why they did things. My board marks surprised everyone, including me.</p>
+      </div>
+      <div class="iam-block">
+        <div class="iam-dot"></div>
+        <p>ICFAI Hyderabad, then an MBA, then growth work, then a second masters at Deakin in Melbourne. Each move felt like following a thread I couldn't quite name.</p>
+      </div>
+    </div>
+
+    <div class="iam-now" id="iam-now">
+      <div class="iam-now-para">
+        These days I spend a lot of time thinking about why people do what they do — and how to make that experience a little less frustrating for them. That's what design became for me. Not a craft I chose, more like a <em>language I found</em> that fit how I already thought.
+      </div>
+      <div class="iam-now-para">
+        I get a lot of energy from teaching and sharing. Not the formal kind — more like pulling up a chair and saying "here's what I figured out, you can have it." Knowledge feels better in motion.
+      </div>
+      <div class="iam-now-para">
+        Still curious. Still watching people. Just doing it with better tools now.
+      </div>
+    </div>
+
+    <div class="iam-esc-hint">
+      <span class="iam-esc-key">esc</span> to close
+    </div>
+  </div>
+</div>
 
 <!-- SELECTED WORK DECK -->
 <div id="work-deck" class="card-deck">
@@ -2023,7 +2264,168 @@ document.addEventListener('click', e => {
   }, 2200);
 })();
 
-// ── UNIFIED KEYBOARD HANDLER ─────────────────────────────────────────────
+// ── I AM: IDLE HINT + LONG PRESS ─────────────────────────────────────────
+(function(){
+  const IDLE_MS    = 4000;
+  const PRESS_MS   = 700;
+  const hintEl     = document.getElementById('iam-idle-hint');
+  const hintText   = document.getElementById('iam-hint-text');
+  const ringEl     = document.getElementById('iam-press-ring');
+  let idleTimer    = null;
+  let pressTimer   = null;
+  let hintVisible  = false;
+  let iamIsNow     = false;
+  let mouseX       = window.innerWidth / 2;
+  let mouseY       = window.innerHeight / 2;
+
+  const prompts = [
+    "Curious about the person behind the pins?",
+    "There's a story the map doesn't tell.",
+    "Every city has a beginning. Want to know mine?",
+    "The backbencher who ended up here.",
+    "Some journeys don't follow the shortest route."
+  ];
+  let promptIdx = 0;
+
+  function positionHint(x, y) {
+    const hintW = 240;
+    const hintH = 60;
+    let left = x + 22;
+    let top  = y;
+    // flip left if too close to right edge
+    if (left + hintW > window.innerWidth - 20) left = x - hintW - 16;
+    // clamp vertically
+    if (top - hintH / 2 < 10) top = hintH / 2 + 10;
+    if (top + hintH / 2 > window.innerHeight - 10) top = window.innerHeight - hintH / 2 - 10;
+    hintEl.style.left = left + 'px';
+    hintEl.style.top  = top + 'px';
+  }
+
+  // -- Idle hint --
+  // Soft notification pop sound via Web Audio API
+  function playPopSound(){
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.setValueAtTime(880, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0, ctx.currentTime);
+      g.gain.linearRampToValueAtTime(0.09, ctx.currentTime + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
+      o.start(ctx.currentTime);
+      o.stop(ctx.currentTime + 0.18);
+    } catch(e){}
+  }
+
+  function resetIdle(){
+    clearTimeout(idleTimer);
+    if(hintVisible){
+      hintEl.classList.remove('show');
+      hintEl.classList.add('hide');
+      setTimeout(()=>hintEl.classList.remove('hide'), 220);
+      hintVisible=false;
+    }
+    idleTimer = setTimeout(function(){
+      if(!introGone) return;
+      hintText.textContent = prompts[promptIdx % prompts.length];
+      promptIdx++;
+      positionHint(mouseX, mouseY);
+      hintEl.classList.remove('hide');
+      hintEl.classList.add('show');
+      hintVisible = true;
+      playPopSound();
+    }, IDLE_MS);
+  }
+
+  document.addEventListener('mousemove', function(e){
+    mouseX = e.clientX; mouseY = e.clientY;
+    if(hintVisible) positionHint(mouseX, mouseY);
+    resetIdle();
+  });
+  document.addEventListener('mousedown', resetIdle);
+  document.addEventListener('touchstart', resetIdle, {passive:true});
+
+  // -- Long press on map (not pins) --
+  function isOnPin(el){
+    return !!(el.closest('.hero-pin-wrap') || el.closest('#panel') ||
+              el.closest('#action-bar') || el.closest('#nameplate') ||
+              el.closest('#profile-card') || el.closest('.card-deck') ||
+              el.closest('#time-filter') || el.closest('#hud') ||
+              el.closest('#iam-overlay'));
+  }
+
+  function startPress(x, y, target){
+    if(!introGone) return;
+    if(isOnPin(target)) return;
+    ringEl.style.left = x + 'px';
+    ringEl.style.top  = y + 'px';
+    ringEl.style.setProperty('--press-dur', PRESS_MS + 'ms');
+    ringEl.classList.remove('charging');
+    void ringEl.offsetWidth;
+    ringEl.classList.add('charging');
+    pressTimer = setTimeout(openIam, PRESS_MS);
+  }
+
+  function cancelPress(){
+    clearTimeout(pressTimer);
+    pressTimer = null;
+    ringEl.classList.remove('charging');
+  }
+
+  document.getElementById('map').addEventListener('mousedown', function(e){
+    startPress(e.clientX, e.clientY, e.target);
+  });
+  document.addEventListener('mouseup', cancelPress);
+  document.addEventListener('mousemove', function(e){
+    if(pressTimer){ cancelPress(); }
+    ringEl.style.left = e.clientX + 'px';
+    ringEl.style.top  = e.clientY + 'px';
+  });
+
+  document.getElementById('map').addEventListener('touchstart', function(e){
+    const t = e.touches[0];
+    startPress(t.clientX, t.clientY, e.target);
+  }, {passive:true});
+  document.addEventListener('touchend',   cancelPress);
+  document.addEventListener('touchmove',  cancelPress, {passive:true});
+
+  // -- Open / close --
+  function openIam(){
+    cancelPress();
+    if(hintVisible){ hintEl.classList.remove('show'); hintVisible=false; }
+    document.getElementById('iam-overlay').classList.add('show');
+    var ab = document.getElementById('action-bar');
+    if(ab){ ab.style.opacity='0'; ab.style.pointerEvents='none'; }
+  }
+  window.closeIam = function(){
+    document.getElementById('iam-overlay').classList.remove('show');
+    if(introGone){
+      var ab = document.getElementById('action-bar');
+      if(ab){ ab.style.opacity='1'; ab.style.pointerEvents='all'; }
+    }
+  };
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && document.getElementById('iam-overlay').classList.contains('show')){
+      e.stopImmediatePropagation();
+      window.closeIam();
+    }
+  });
+
+  // -- Toggle Then/Now --
+  window.iamFlip = function(){
+    iamIsNow = !iamIsNow;
+    document.getElementById('iam-pill').classList.toggle('now', iamIsNow);
+    document.getElementById('iam-journey').classList.toggle('hidden', iamIsNow);
+    document.getElementById('iam-now').classList.toggle('visible', iamIsNow);
+    document.getElementById('iam-lbl-then').classList.toggle('active', !iamIsNow);
+    document.getElementById('iam-lbl-now').classList.toggle('active', iamIsNow);
+  };
+})();
+
 document.addEventListener('keydown', function(e) {
   if(window.activeDeck) {
     if(e.key==='ArrowRight'){ e.preventDefault(); e.stopImmediatePropagation(); nextCard(window.activeDeck); return; }
