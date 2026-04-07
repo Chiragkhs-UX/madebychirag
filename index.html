@@ -698,6 +698,118 @@ a.proj-link .proj-body { pointer-events:none; }
   .tbtn .tsub { display:none; }
 }
 
+/* ── LEFT SIDEBAR PINS — desktop only, hero-pin-wrap style ── */
+
+@media (min-width:769px) {
+  #action-bar { display:none !important; }
+}
+
+#left-cards {
+  position:fixed;
+  left:24px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:500;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1);
+  transform:translateY(-50%) translateX(-12px);
+  align-items:flex-start;
+}
+#left-cards.visible {
+  opacity:1;
+  pointer-events:all;
+  transform:translateY(-50%) translateX(0);
+}
+@media (max-width:768px) {
+  #left-cards { display:none !important; }
+}
+
+/* Wrapper for stagger entrance */
+.lpin-wrap {
+  opacity:0;
+  transform:translateX(-10px);
+  transition:opacity .4s cubic-bezier(.16,1,.3,1), transform .4s cubic-bezier(.16,1,.3,1);
+}
+.lpin-wrap.in {
+  opacity:1;
+  transform:translateX(0);
+}
+
+/* Force all left pins to same size — is-work size (52×52) */
+#left-cards .hero-pin-wrap.is-work .hero-bubble,
+#left-cards .hero-pin-wrap.is-life .hero-bubble,
+#left-cards .hero-pin-wrap.is-education .hero-bubble {
+  width:52px;
+  height:52px;
+}
+#left-cards .hero-pin-wrap.is-work .bubble-icon,
+#left-cards .hero-pin-wrap.is-life .bubble-icon,
+#left-cards .hero-pin-wrap.is-education .bubble-icon {
+  font-size:22px;
+}
+/* Label same width for all */
+#left-cards .pin-label {
+  min-width:160px;
+  width:160px;
+}
+#left-cards .pin-label-name {
+  font-size:13px;
+}
+/* Dim inactive pins, full on active/hover */
+#left-cards .hero-pin-wrap {
+  opacity:0.55;
+  transition:opacity .3s, transform .28s cubic-bezier(.34,1.56,.64,1), filter .28s;
+}
+#left-cards .hero-pin-wrap:hover,
+#left-cards .hero-pin-wrap.active {
+  opacity:1;
+}
+
+/* ── ACTION BAR — mobile 2x2 grid (from index__3__) ── */
+
+@media (max-width:768px) {
+  #action-bar { display:block !important; }
+}
+
+#action-bar {
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%);
+  z-index:2000;display:flex;align-items:stretch;
+  background:rgba(30,28,26,0.94);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:50px;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.03);
+  transition:opacity .4s,transform .4s;
+  white-space:nowrap;
+  max-width:calc(100vw - 24px);
+  opacity:0;
+  pointer-events:none;
+}
+#action-bar.hidden{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(8px);}
+#action-bar[style*="opacity:0"]{pointer-events:none;}
+.abar-btn {
+  display:flex;align-items:center;gap:10px;
+  padding:12px 20px;cursor:pointer;
+  background:transparent;border:none;
+  transition:background .2s;
+  min-width:0;
+}
+.abar-btn:hover{background:rgba(255,255,255,0.06);}
+.abar-btn { pointer-events:auto !important; }
+.abar-ico{font-size:18px;line-height:1;flex-shrink:0;}
+.abar-text{display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.abar-label{font-family:var(--serif);font-size:13px;font-weight:400;color:rgba(255,252,245,0.92);}
+.abar-sub{font-family:var(--mono);font-size:6.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,0.32);}
+.abar-btn:nth-child(1):hover .abar-label{color:#7dcecc;}
+.abar-btn:nth-child(3):hover .abar-label{color:#c8864a;}
+.abar-btn:nth-child(5):hover .abar-label{color:#a78bd4;}
+.abar-btn:nth-child(7):hover .abar-label{color:#7dab7a;}
+.abar-sep{width:1px;background:rgba(255,255,255,0.08);margin:10px 0;flex-shrink:0;}
+
 /* ── RESPONSIVE: Tablet (≤768px) ──────────────────────────────────── */
 @media (max-width:768px) {
   /* Hide custom cursor on touch */
@@ -739,7 +851,7 @@ a.proj-link .proj-body { pointer-events:none; }
 
   /* Action bar — 2x2 grid on mobile */
   #action-bar {
-    display: grid;
+    display: grid !important;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
     padding: 0;
@@ -748,10 +860,14 @@ a.proj-link .proj-body { pointer-events:none; }
     width: calc(100vw - 40px);
     max-width: 340px;
     bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     overflow: hidden;
     background: rgba(34,31,28,0.97);
     border: 1px solid rgba(255,255,255,0.10);
     box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    align-items: stretch;
+    white-space: normal;
   }
   .abar-sep { display: none; }
   .abar-btn {
@@ -770,7 +886,7 @@ a.proj-link .proj-body { pointer-events:none; }
   }
   .abar-btn:nth-of-type(2n) { border-right: none; }
   .abar-btn:nth-of-type(3), .abar-btn:nth-of-type(4) { border-bottom: none; }
-  .abar-btn:hover, .abar-btn:active { background: rgba(200,134,74,0.08); }
+  .abar-btn:active { background: rgba(200,134,74,0.08); }
   .abar-ico { font-size: 20px; flex-shrink: 0; line-height: 1; }
   .abar-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
   .abar-label { font-family: var(--serif); font-size: 13px; font-weight: 400; color: rgba(255,252,245,0.90); letter-spacing: 0; text-align: left; text-transform: none; }
@@ -826,11 +942,12 @@ a.proj-link .proj-body { pointer-events:none; }
   .intro-pills { margin-bottom:18px; }
   #enter-btn { padding:12px 24px; font-size:9.5px; }
 
-  /* Action bar wraps to 2 rows */
+
+
+  /* Action bar wraps on tiny phones */
   #action-bar { max-width:100vw; }
-  .abar-btn { flex-direction:column; align-items:center; gap:3px; padding:8px 8px; }
-  .abar-text { align-items:center; }
-  .abar-label { font-size:9.5px; }
+  .abar-btn { padding:14px 14px; gap:8px; }
+  .abar-label { font-size:11.5px; }
 
   /* Side panel */
   .p-name { font-size:38px; }
@@ -1308,7 +1425,7 @@ a.proj-link .proj-body { pointer-events:none; }
         <span class="pc-link-val">+91 99677 55819</span>
       </div>
     </a>
-    <a class="pc-link pc-link-medium" href="https://drive.google.com/file/d/1RhVWGUMwDkHpCL36cGJr4Fzz0TwsGRdT/view" target="_blank">
+    <a class="pc-link pc-link-medium" href="https://drive.google.com/file/d/1grcRBDtO9MUBJBrCWMwDV197TD795jUm/view" target="_blank">
       <div class="pc-link-icon">
         <svg width="13" height="14" viewBox="0 0 13 14" fill="none"><path d="M1.5 1h7l3 3v9a.5.5 0 01-.5.5h-9A.5.5 0 011 13V1.5A.5.5 0 011.5 1z" stroke="rgba(200,134,74,0.7)" stroke-width="1.2"/><path d="M8 1v3.5H11M4 7.5h5M4 10h3" stroke="rgba(200,134,74,0.7)" stroke-width="1.2" stroke-linecap="round"/></svg>
       </div>
@@ -1472,9 +1589,88 @@ a.proj-link .proj-body { pointer-events:none; }
   <div class="deck-hint">Tap top card to read · Swipe to browse</div>
 </div>
 
+<!-- LEFT SIDEBAR PINS — desktop only, hero-pin-wrap style -->
+<div id="left-cards">
+
+  <div class="lpin-wrap" id="rs-work">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#5abf70;--bubble-glow:#5abf7055;" onclick="openWork()">
+      <div class="hero-bubble">
+        <div class="bubble-bg"></div>
+        <div class="bubble-ring"></div>
+        <div class="bubble-inner"></div>
+        <div class="bubble-pulse"></div>
+        <div class="bubble-pulse2"></div>
+        <div class="bubble-icon">🚦</div>
+      </div>
+      <div class="pin-stem"></div>
+      <div class="pin-label">
+        <div class="pin-label-name">Selected Work</div>
+        <div class="pin-label-sub">Signal Ahead &nbsp;
+          <span id="tl-red" class="pin-light" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.1);vertical-align:middle;margin-left:4px;"></span><span id="tl-amber" class="pin-light" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.1);vertical-align:middle;margin-left:2px;"></span><span id="tl-green" class="pin-light" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.1);vertical-align:middle;margin-left:2px;"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lpin-wrap" id="rs-charche">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#f0a030;--bubble-glow:#f0a03055;" onclick="openCharche()">
+      <div class="hero-bubble">
+        <div class="bubble-bg"></div>
+        <div class="bubble-ring"></div>
+        <div class="bubble-inner"></div>
+        <div class="bubble-pulse"></div>
+        <div class="bubble-pulse2"></div>
+        <div class="bubble-icon">☕</div>
+      </div>
+      <div class="pin-stem"></div>
+      <div class="pin-label">
+        <div class="pin-label-name">Chirag ke Charche</div>
+        <div class="pin-label-sub">Tapri Break</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lpin-wrap" id="rs-memory">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#d4904e;--bubble-glow:#d4904e55;" onclick="openMemory()">
+      <div class="hero-bubble">
+        <div class="bubble-bg"></div>
+        <div class="bubble-ring"></div>
+        <div class="bubble-inner"></div>
+        <div class="bubble-pulse"></div>
+        <div class="bubble-pulse2"></div>
+        <div class="bubble-icon">🚧</div>
+      </div>
+      <div class="pin-stem"></div>
+      <div class="pin-label">
+        <div class="pin-label-name">Memory Lane</div>
+        <div class="pin-label-sub">Road Being Built</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lpin-wrap" id="rs-edu">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#6aa3d4;--bubble-glow:#6aa3d455;" onclick="openEdu()">
+      <div class="hero-bubble">
+        <div class="bubble-bg"></div>
+        <div class="bubble-ring"></div>
+        <div class="bubble-inner"></div>
+        <div class="bubble-pulse"></div>
+        <div class="bubble-pulse2"></div>
+        <div class="bubble-icon">👮</div>
+      </div>
+      <div class="pin-stem"></div>
+      <div class="pin-label">
+        <div class="pin-label-name">Education</div>
+        <div class="pin-label-sub">Naka Bandi</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <div id="action-bar" style="opacity:0;">
   <button class="abar-btn" onclick="openWork()">
-    <span class="abar-ico">🗂️</span>
+    <span class="abar-ico">🚦</span>
     <div class="abar-text">
       <span class="abar-label">Selected Work</span>
       <span class="abar-sub">Case studies &amp; writing</span>
@@ -1482,7 +1678,7 @@ a.proj-link .proj-body { pointer-events:none; }
   </button>
   <div class="abar-sep"></div>
   <button class="abar-btn" onclick="openCharche()">
-    <span class="abar-ico">🍵</span>
+    <span class="abar-ico">☕</span>
     <div class="abar-text">
       <span class="abar-label">Chirag ke Charche</span>
       <span class="abar-sub">Gyaan &amp; recommendations</span>
@@ -1490,7 +1686,7 @@ a.proj-link .proj-body { pointer-events:none; }
   </button>
   <div class="abar-sep"></div>
   <button class="abar-btn" onclick="openMemory()">
-    <span class="abar-ico">📷</span>
+    <span class="abar-ico">🚧</span>
     <div class="abar-text">
       <span class="abar-label">Memory Lane</span>
       <span class="abar-sub">Chapters from the journey</span>
@@ -1498,13 +1694,14 @@ a.proj-link .proj-body { pointer-events:none; }
   </button>
   <div class="abar-sep"></div>
   <button class="abar-btn" onclick="openEdu()">
-    <span class="abar-ico">🎓</span>
+    <span class="abar-ico">👮</span>
     <div class="abar-text">
       <span class="abar-label">Education</span>
-      <span class="abar-sub">Institutions &amp; learning</span>
+      <span class="abar-sub">Credentials &amp; learning</span>
     </div>
   </button>
 </div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -2161,6 +2358,9 @@ const projHTML=loc.projects.map(p=>{
   // Hide action-bar when panel opens on mobile
   var ab=document.getElementById('action-bar');
   if(ab){ab.style.opacity='0';ab.style.pointerEvents='none';}
+  // Hide left-cards when panel opens (desktop)
+  var lc=document.getElementById('left-cards');
+  if(lc) lc.classList.remove('visible');
   // Prevent map jump on panel open
   setTimeout(()=>map&&map.invalidateSize({pan:false}),50);
 }
@@ -2169,6 +2369,9 @@ function closePanel(){document.getElementById('panel').classList.remove('open');
   // Restore action-bar when panel closes
   var ab2=document.getElementById('action-bar');
   if(ab2&&introGone){ab2.style.opacity='1';ab2.style.pointerEvents='all';}
+  // Restore left-cards on desktop
+  var lc2=document.getElementById('left-cards');
+  if(lc2&&introGone&&window.innerWidth>768) lc2.classList.add('visible');
   map.flyToBounds(L.latLngBounds(locs.map(l=>[l.lat,l.lng])),{padding:[80,80],duration:1.0,easeLinearity:.3});}
 function navPin(dir){if(driving)return;const idx=locs.findIndex(l=>l.id===(currentPanelLoc||currentLoc||locs[0]).id);handlePinClick(locs[(idx+dir+locs.length)%locs.length]);}
 
@@ -2185,15 +2388,129 @@ function backToLanding(){
   document.getElementById('hud').classList.remove('visible');
   var ab=document.getElementById('action-bar');
   if(ab){ab.style.opacity='0';}
+  var lc=document.getElementById('left-cards');
+  if(lc) lc.classList.remove('visible');
+  document.querySelectorAll('.lpin-wrap').forEach(function(el){ el.classList.remove('in'); });
+  document.querySelectorAll('#left-cards .hero-pin-wrap').forEach(function(el){ el.classList.remove('active'); });
+  stopPinCycle();
   if(panelOpen){document.getElementById('panel').classList.remove('open');panelOpen=false;}
   if(window.activeDeck)closeDeck(window.activeDeck);
   introGone=false;
 }
 function enterPortfolio(){
   setTimeout(function(){
+    var lc = document.getElementById('left-cards');
     var ab = document.getElementById('action-bar');
-    if(ab){ ab.style.opacity='1'; ab.style.pointerEvents='all'; }
-  }, 1800);document.getElementById('intro').classList.add('gone');document.getElementById('map-ui').classList.add('visible');introGone=true;styleTiles();spawnCreta(locs[0]);setTimeout(()=>document.getElementById('hud').classList.add('visible'),1800);}
+    if(window.innerWidth <= 768){
+      // Mobile: show action-bar
+      if(ab){ ab.style.opacity='1'; ab.style.pointerEvents='all'; }
+    } else {
+      // Desktop: show left-cards with stagger
+      if(lc) lc.classList.add('visible');
+      var stops = ['rs-work','rs-charche','rs-memory','rs-edu'];
+      stops.forEach(function(id, i){
+        setTimeout(function(){
+          var el = document.getElementById(id);
+          if(el) el.classList.add('in');
+        }, i * 160);
+      });
+      setTimeout(startPinCycle, stops.length * 160 + 400);
+    }
+  }, 1800);
+  document.getElementById('intro').classList.add('gone');
+  document.getElementById('map-ui').classList.add('visible');
+  introGone=true; styleTiles(); spawnCreta(locs[0]);
+  setTimeout(()=>document.getElementById('hud').classList.add('visible'),1800);
+  startSignalCycle();
+}
+
+function startSignalCycle(){
+  var phases=[
+    {red:true, amber:false,green:false,dur:6000},
+    {red:false,amber:true, green:false,dur:1500},
+    {red:false,amber:false,green:true, dur:5000},
+    {red:false,amber:true, green:false,dur:1500},
+  ];
+  var phase=0;
+  function applyPhase(){
+    var p=phases[phase];
+    var r=document.getElementById('tl-red');
+    var a=document.getElementById('tl-amber');
+    var g=document.getElementById('tl-green');
+    if(!r) return;
+    r.style.background = p.red   ? '#e05050' : 'rgba(255,255,255,.10)';
+    r.style.boxShadow  = p.red   ? '0 0 5px #e05050' : 'none';
+    a.style.background = p.amber ? '#f0a030' : 'rgba(255,255,255,.10)';
+    a.style.boxShadow  = p.amber ? '0 0 5px #f0a030' : 'none';
+    g.style.background = p.green ? '#5abf70' : 'rgba(255,255,255,.10)';
+    g.style.boxShadow  = p.green ? '0 0 5px #5abf70' : 'none';
+    phase=(phase+1)%phases.length;
+    setTimeout(applyPhase,p.dur);
+  }
+  applyPhase();
+}
+
+// ── PIN AUTO-CYCLE — rotates active highlight through all 4 pins ──
+var pinCycleTimer = null;
+var pinCycleIdx   = 0;
+var pinIds        = ['rs-work','rs-charche','rs-memory','rs-edu'];
+var pinCycleRunning = false;
+
+function setActivePin(idx){
+  pinIds.forEach(function(id, i){
+    var wrap = document.getElementById(id);
+    if(!wrap) return;
+    var inner = wrap.querySelector('.hero-pin-wrap');
+    if(inner) inner.classList.toggle('active', i === idx);
+  });
+  pinCycleIdx = idx;
+}
+
+function startPinCycle(){
+  if(pinCycleRunning) return;
+  pinCycleRunning = true;
+  setActivePin(0);
+  pinCycleTimer = setInterval(function(){
+    pinCycleIdx = (pinCycleIdx + 1) % pinIds.length;
+    setActivePin(pinCycleIdx);
+  }, 2500);
+}
+
+function stopPinCycle(){
+  clearInterval(pinCycleTimer);
+  pinCycleTimer = null;
+  pinCycleRunning = false;
+}
+
+// Pause cycle on hover, resume on leave
+(function(){
+  function hookPins(){
+    pinIds.forEach(function(id){
+      var wrap = document.getElementById(id);
+      if(!wrap) return;
+      wrap.addEventListener('mouseenter', function(){
+        stopPinCycle();
+        pinIds.forEach(function(pid){
+          var w = document.getElementById(pid);
+          if(w){ var h = w.querySelector('.hero-pin-wrap'); if(h) h.classList.remove('active'); }
+        });
+        var inner = wrap.querySelector('.hero-pin-wrap');
+        if(inner) inner.classList.add('active');
+      });
+      wrap.addEventListener('mouseleave', function(){
+        pinCycleIdx = pinIds.indexOf(id);
+        startPinCycle();
+      });
+    });
+  }
+  // Hook after DOM ready (pins may not be in DOM yet)
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', hookPins);
+  } else {
+    hookPins();
+  }
+})();
+
 
 const curEl=document.getElementById('cur'),ringEl=document.getElementById('cur-ring');
 let rx=window.innerWidth/2,ry=window.innerHeight/2;
@@ -2442,12 +2759,19 @@ document.addEventListener('click', e => {
     document.getElementById('iam-overlay').classList.add('show');
     var ab = document.getElementById('action-bar');
     if(ab){ ab.style.opacity='0'; ab.style.pointerEvents='none'; }
+    var lc = document.getElementById('left-cards');
+    if(lc) lc.classList.remove('visible');
   }
   window.closeIam = function(){
     document.getElementById('iam-overlay').classList.remove('show');
     if(introGone){
-      var ab = document.getElementById('action-bar');
-      if(ab){ ab.style.opacity='1'; ab.style.pointerEvents='all'; }
+      var ab2 = document.getElementById('action-bar');
+      if(window.innerWidth <= 768){
+        if(ab2){ ab2.style.opacity='1'; ab2.style.pointerEvents='all'; }
+      } else {
+        var lc = document.getElementById('left-cards');
+        if(lc) lc.classList.add('visible');
+      }
     }
   };
 
