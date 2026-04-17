@@ -1380,7 +1380,31 @@ a.proj-link .proj-body { pointer-events:none; }
   .iam-block:nth-child(3) { margin-left:40px; }
   .iam-now-para:nth-child(2) { margin-left:20px; }
   .iam-now-para:nth-child(3) { margin-left:40px; }
-  #iam-idle-hint { bottom:120px; font-size:8px; }
+  #iam-idle-hint {
+    bottom:140px;
+    left:50% !important;
+    top:auto !important;
+    transform:translateX(-50%) !important;
+    width:auto;
+    max-width:88vw;
+  }
+  .iam-hint-avatar { display:none; }
+  .iam-hint-bubble1 { display:none; }
+  .iam-hint-bubble2 {
+    padding:9px 14px;
+    margin-bottom:6px;
+    border-radius:20px;
+  }
+  .iam-hint-btns { justify-content:center; }
+  .iam-hint-btn { flex:none; padding:7px 16px; }
+  @keyframes bubblePop {
+    0%   { opacity:0; transform:translateX(-50%) scale(0.82); }
+    60%  { transform:translateX(-50%) scale(1.03); }
+    100% { opacity:1; transform:translateX(-50%) scale(1); }
+  }
+  @keyframes bubbleHide {
+    to { opacity:0; transform:translateX(-50%) scale(0.88); }
+  }
 }
 </style>
 </head>
@@ -1661,7 +1685,7 @@ a.proj-link .proj-body { pointer-events:none; }
 <div id="left-cards">
 
   <div class="lpin-wrap" id="rs-work">
-    <div class="hero-pin-wrap is-work" style="--bubble-color:#5abf70;--bubble-glow:#5abf7055;" onclick="openWork()">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#5abf70;--bubble-glow:#5abf7055;" onclick="openWork()" onmouseenter="playTrafficHover()">
       <div class="hero-bubble">
         <div class="bubble-bg"></div>
         <div class="bubble-ring"></div>
@@ -1681,7 +1705,7 @@ a.proj-link .proj-body { pointer-events:none; }
   </div>
 
   <div class="lpin-wrap" id="rs-charche">
-    <div class="hero-pin-wrap is-work" style="--bubble-color:#f0a030;--bubble-glow:#f0a03055;" onclick="openCharche()">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#f0a030;--bubble-glow:#f0a03055;" onclick="openCharche()" onmouseenter="playTrafficHover()">
       <div class="hero-bubble">
         <div class="bubble-bg"></div>
         <div class="bubble-ring"></div>
@@ -1699,7 +1723,7 @@ a.proj-link .proj-body { pointer-events:none; }
   </div>
 
   <div class="lpin-wrap" id="rs-memory">
-    <div class="hero-pin-wrap is-work" style="--bubble-color:#d4904e;--bubble-glow:#d4904e55;" onclick="openMemory()">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#d4904e;--bubble-glow:#d4904e55;" onclick="openMemory()" onmouseenter="playTrafficHover()">
       <div class="hero-bubble">
         <div class="bubble-bg"></div>
         <div class="bubble-ring"></div>
@@ -1717,7 +1741,7 @@ a.proj-link .proj-body { pointer-events:none; }
   </div>
 
   <div class="lpin-wrap" id="rs-edu">
-    <div class="hero-pin-wrap is-work" style="--bubble-color:#6aa3d4;--bubble-glow:#6aa3d455;" onclick="openEdu()">
+    <div class="hero-pin-wrap is-work" style="--bubble-color:#6aa3d4;--bubble-glow:#6aa3d455;" onclick="openEdu()" onmouseenter="playTrafficHover()">
       <div class="hero-bubble">
         <div class="bubble-bg"></div>
         <div class="bubble-ring"></div>
@@ -1737,7 +1761,7 @@ a.proj-link .proj-body { pointer-events:none; }
 </div>
 
 <div id="action-bar" style="opacity:0;">
-  <button class="abar-btn" onclick="openWork()">
+  <button class="abar-btn" onclick="openWork()" onmouseenter="playTrafficHover()">
     <span class="abar-ico">🚦</span>
     <div class="abar-text">
       <span class="abar-label">Selected Work</span>
@@ -1745,7 +1769,7 @@ a.proj-link .proj-body { pointer-events:none; }
     </div>
   </button>
   <div class="abar-sep"></div>
-  <button class="abar-btn" onclick="openCharche()">
+  <button class="abar-btn" onclick="openCharche()" onmouseenter="playTrafficHover()">
     <span class="abar-ico">☕</span>
     <div class="abar-text">
       <span class="abar-label">Chirag ke Charche</span>
@@ -1753,7 +1777,7 @@ a.proj-link .proj-body { pointer-events:none; }
     </div>
   </button>
   <div class="abar-sep"></div>
-  <button class="abar-btn" onclick="openMemory()">
+  <button class="abar-btn" onclick="openMemory()" onmouseenter="playTrafficHover()">
     <span class="abar-ico">🚧</span>
     <div class="abar-text">
       <span class="abar-label">Memory Lane</span>
@@ -1761,7 +1785,7 @@ a.proj-link .proj-body { pointer-events:none; }
     </div>
   </button>
   <div class="abar-sep"></div>
-  <button class="abar-btn" onclick="openEdu()">
+  <button class="abar-btn" onclick="openEdu()" onmouseenter="playTrafficHover()">
     <span class="abar-ico">👮</span>
     <div class="abar-text">
       <span class="abar-label">Education</span>
@@ -2752,7 +2776,29 @@ document.addEventListener('click', e => {
     } catch(e){}
   }
 
-  function dismissHint(){
+  function playTrafficHover(){
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const t = ctx.currentTime;
+      // Soft indicator-tick: short sine blip, like a turn signal click
+      // Two tiny tones — high & quick, like a relay switching
+      [900, 720].forEach(function(freq, i){
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, t + i * 0.045);
+        g.gain.linearRampToValueAtTime(0.07, t + i * 0.045 + 0.008);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.045 + 0.07);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(t + i * 0.045);
+        o.stop(t + i * 0.045 + 0.08);
+      });
+    } catch(e){}
+  }
+  window.playTrafficHover = playTrafficHover;
+
+  window.dismissHint = function dismissHint(){
     var h = document.getElementById('iam-idle-hint');
     h.classList.remove('show');
     h.classList.add('hide');
@@ -2792,7 +2838,7 @@ document.addEventListener('click', e => {
         setTimeout(function(){ hintEl.classList.remove('hide'); }, 220);
         hintVisible = false;
         resetIdle();
-      }, 4000);
+      }, 8000);
     }, IDLE_MS);
   }
 
@@ -2849,7 +2895,7 @@ document.addEventListener('click', e => {
   document.addEventListener('touchmove',  cancelPress, {passive:true});
 
   // -- Open / close --
-  function openIam(){
+  window.openIam = function openIam(){
     cancelPress();
     if(hintVisible){ hintEl.classList.remove('show'); hintVisible=false; }
     document.getElementById('iam-overlay').classList.add('show');
