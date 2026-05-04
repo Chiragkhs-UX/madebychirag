@@ -707,6 +707,60 @@ a.proj-link .proj-body { pointer-events:none; }
   .tbtn .tsub { display:none; }
 }
 
+/* ── RESPONSIVE: Tablet / narrow laptop (≤1080px) ─────────────── */
+@media (max-width:1080px) {
+  /* Left cards — tighter, smaller bubbles */
+  #left-cards {
+    left: 14px;
+    gap: 10px;
+  }
+  #left-cards .hero-pin-wrap.is-work .hero-bubble,
+  #left-cards .hero-pin-wrap.is-life .hero-bubble,
+  #left-cards .hero-pin-wrap.is-education .hero-bubble {
+    width: 42px;
+    height: 42px;
+  }
+  #left-cards .hero-pin-wrap.is-work .bubble-icon,
+  #left-cards .hero-pin-wrap.is-life .bubble-icon,
+  #left-cards .hero-pin-wrap.is-education .bubble-icon {
+    font-size: 18px;
+  }
+  #left-cards .pin-label {
+    min-width: 130px;
+    width: 130px;
+    padding: 5px 10px 6px;
+  }
+  #left-cards .pin-label-name {
+    font-size: 11px;
+  }
+  #left-cards .pin-label-sub {
+    font-size: 6px;
+  }
+
+  /* Nameplate — tighter */
+  #nameplate { top: 18px; left: 18px; }
+  .np-name { font-size: clamp(18px, 2.2vw, 26px); }
+  .np-role { font-size: 9px; }
+
+  /* Panel — narrower */
+  #panel { width: 340px; }
+  .p-name { font-size: 40px; }
+  #panel-hero { padding: 22px 24px 18px; }
+  .panel-section { padding: 18px 24px; }
+
+  /* Legend — tuck closer to edge */
+  #legend { top: 16px; right: 16px; gap: 6px; }
+  .leg-item { font-size: 9px; gap: 5px; }
+
+  /* Time filter — compact */
+  #time-filter { bottom: 14px; }
+  .tbtn { min-width: 56px; padding: 7px 10px; font-size: 10px; }
+
+  /* HUD — hide shortcuts to save space */
+  .hud-shortcuts { display: none; }
+  #hud { bottom: 14px; left: 14px; }
+}
+
 /* ── LEFT SIDEBAR PINS — desktop only, hero-pin-wrap style ── */
 
 @media (min-width:769px) {
