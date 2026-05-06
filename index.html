@@ -333,6 +333,8 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 .p-stats { display:flex;gap:0;margin-top:28px;border:1px solid var(--border);border-radius:3px;overflow:hidden; }
 .p-stat { flex:1;padding:14px 16px;text-align:center;border-right:1px solid var(--border);background:var(--panel2); }
 .p-stat:last-child { border-right:none; }
+.p-stat-clickable { transition:background .2s; }
+.p-stat-clickable:hover { background:rgba(200,134,74,0.08); }
 .p-stat-num { font-family:var(--serif);font-size:28px;font-weight:300;line-height:1;margin-bottom:4px; }
 .p-stat-label { font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted); }
 #panel-body { flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--border) transparent; }
@@ -1601,7 +1603,7 @@ a.proj-link .proj-body { pointer-events:none; }
       <span class="hud-key-label">close</span>
     </div>
     <div class="hud-contacts">
-      <a class="hud-link" href="/cdn-cgi/l/email-protection#385b50514a595f16534d40785f55595154165b5755">✉ Email</a>
+      <a class="hud-link" href="mailto:chirag.kux@gmail.com">✉ Email</a>
       <a class="hud-link" href="https://in.linkedin.com/in/chiragkhs" target="_blank">in LinkedIn</a>
       <a class="hud-link" href="https://chirragk.medium.com/" target="_blank" class="pc-link-medium">✍ Medium</a>
     </div>
@@ -1891,6 +1893,24 @@ var work_data = [
     link: 'https://chirragk.medium.com/how-we-built-subzero-1-0-axis-bank-design-system-a-behind-the-scenes-b1ec8c0ea774'
   },
   {
+    ico: '🛰️',
+    type: 'side-project',
+    co: 'Side Project · 2025',
+    title: 'Design Radar',
+    desc: 'An internal design team management tool I built from scratch — sprint tracking, PM request inbox, UX impact logging, and skills radar. Because spreadsheets weren\'t cutting it.',
+    tags: ['Design Ops', 'Side Project', 'Built by me'],
+    link: 'https://medium.com/@chirragk/design-radar-d77797c814a1'
+  },
+  {
+    ico: '🌱',
+    type: 'side-project',
+    co: 'Side Project · Building now',
+    title: 'Neki',
+    desc: 'Something I\'m quietly building right now. More soon.',
+    tags: ['Side Project', 'WIP', 'Coming soon'],
+    link: null
+  },
+  {
     ico: '✍️',
     type: 'article',
     co: 'Medium · @chirragk',
@@ -2078,6 +2098,11 @@ function openWork() {
   buildDeck('work-deck','work-cards',work_data,'work');
   showDeck('work-deck');
 }
+function openSideProjects() {
+  var sp = work_data.filter(function(d){ return d.type === 'side-project'; });
+  buildDeck('work-deck','work-cards',sp,'work');
+  showDeck('work-deck');
+}
 function openCharche(){
   buildDeck('charche-deck','charche-cards',reco_data,'charche');
   showDeck('charche-deck');
@@ -2201,7 +2226,7 @@ function buildDeck(deckId, cardsId, data, type) {
           '<div style="display:flex;flex-direction:column;gap:0;flex:1;min-height:0;">' +
             '<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">' +
               '<span style="font-size:22px;line-height:1;">' + d.ico + '</span>' +
-              '<span style="font-family:var(--mono);font-size:7px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);">' + (d.type==="article" ? "Article" : "Case Study") + '</span>' +
+              '<span style="font-family:var(--mono);font-size:7px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);">' + (d.type==="article" ? "Article" : d.type==="side-project" ? "Side Project" : "Case Study") + '</span>' +
             '</div>' +
             '<div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(232,224,208,0.38);margin-bottom:8px;">' + d.co + '</div>' +
             '<div style="font-family:var(--serif);font-size:clamp(17px,1.6vw,21px);font-weight:400;line-height:1.35;color:rgba(255,252,245,0.95);margin-bottom:12px;">' + d.title + '</div>' +
@@ -2211,7 +2236,7 @@ function buildDeck(deckId, cardsId, data, type) {
             '<div style="display:flex;flex-wrap:wrap;gap:4px;">' +
               d.tags.map(function(t){return '<span style="padding:2px 9px;border:1px solid rgba(255,255,255,0.07);border-radius:20px;font-family:var(--mono);font-size:6px;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,224,208,0.32);">'+t+'</span>';}).join('') +
             '</div>' +
-            '<a href="' + d.link + '" target="_blank" onclick="event.stopPropagation();" style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;white-space:nowrap;padding:6px 12px;border:1px solid rgba(200,134,74,0.35);border-radius:20px;">View →</a>' +
+            (d.link ? '<a href="' + d.link + '" target="_blank" onclick="event.stopPropagation();" style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);text-decoration:none;white-space:nowrap;padding:6px 12px;border:1px solid rgba(200,134,74,0.35);border-radius:20px;">View →</a>' : '') +
           '</div>' +
         '</div>';
     } else {
@@ -2393,13 +2418,13 @@ function updateDots(deckId, container) {
 const locs = [
   { id:'chembur', name:'Home', sub:'Eastern Suburbs · Home base since 2014', type:'home', color:'#c8864a', icon:'🏡', lat:19.0626, lng:72.8993,
     quote:'"Design teaches you to observe. Fatherhood teaches you why it matters."',
-    stats:[{num:'1',label:'Kid'},{num:'∞',label:'Chai cups'}],
+    stats:[{num:'1',label:'Kid'},{num:'∞',label:'Side Projects'}],
     day:[{t:'Evening',a:'Reach home, take care of the baby',n:'Switch off from work. Most important part of the day.'},{t:'Weekends',a:'Baby duty, then the mall',n:'Observe how families navigate spaces. Unintentional UX research.'},{t:'Holidays',a:'Full-time dad',n:'No half-measures. Baby gets everything.'},{t:'Late nights',a:'Read articles when there is time',n:'Design, fintech, product — whatever caught my eye during the week.'},{t:'Always',a:'Observe people everywhere',n:'Malls, commutes, queues — watching how people behave is the real brief.'}],
     projects:[{title:'Father · Home',year:'Ongoing',desc:'Being a father sharpened my eye for what really matters in design — patience, observation, and building things that quietly work for people who never asked for instructions.',tags:['Family','Life','Empathy']},{title:'Personal Design Practice',year:'2020–',desc:'Side explorations in type, interfaces, and ideas that don\'t fit a brief — a space to stay curious outside of client work.',tags:['Side projects','Exploration']}]
   },
   { id:'dadar', name:'Axis Bank–Freecharge', sub:'Lead Product Designer · Dadar · Mar 2021 – Dec 2024', type:'work', color:'#6aa3d4', icon:'🏦', lat:19.0178, lng:72.8478,
     quote:'"Banking at scale is humbling. Every decision touches 240 million people."',
-    stats:[{num:'3.5',label:'Years'},{num:'240M+',label:'Customers'},{num:'100+',label:'Designers supported'}],
+    stats:[{num:'3.9',label:'Years'},{num:'240M+',label:'Customers'},{num:'100+',label:'Designers supported'}],
     day:[{t:'9:00',a:'Harbour line commute',n:'Podcasts and people-watching from Chembur.'},{t:'10:00',a:'Design system syncs & sprint reviews',n:'Aligning across Axis Design Lab.'},{t:'13:00',a:'Aunty\'s Chinese stall downstairs',n:'A small stall outside the office. The best quick lunch — no menu, just trust.'},{t:'15:00',a:'Design audits & stakeholder reviews',n:'Ensuring quality and alignment at scale.'},{t:'19:00',a:'Harbour line back to Chembur',n:'Long commute — time to decompress and plan the next day.'}],
     projects:[{title:'Subzero 1.0 — Axis Bank Design System',year:'2021',desc:'Spearheaded creation of Axis Bank\'s design system (Subzero 1.0), supporting 100+ designers and developers. Established governance, component libraries, and accessibility standards.',tags:['Design Systems','Accessibility','Scale'],link:'https://chirragk.medium.com/how-we-built-subzero-1-0-axis-bank-design-system-a-behind-the-scenes-b1ec8c0ea774'},{title:'Investment Journeys & Digital Onboarding',year:'2021–2023',desc:'Led the redesign of investment journeys, PFM tools, and digital onboarding flows for Axis Bank banking products — including a major revamp of the Axis Securities trading platform.',tags:['Product Design','Investment UX','Onboarding']},{title:'Axis Securities — Investor App & Web Revamp',year:'2022–2023',desc:'End-to-end redesign of the Axis Securities investor app and web platform. Simplified the trading and portfolio experience for retail investors — cleaner flows, faster decision-making, and a consistent cross-platform design language.',tags:['Trading','Investor UX','App & Web']},{title:'Reimagining the Mutual Fund Experience',year:'2023–2024',desc:'Turned a cluttered mutual fund discovery flow into a calm, confidence-first investing journey — from zero to a product 240M users could trust. Reduced drop-offs and increased first-time investor conversions.',tags:['Mutual Funds','Fintech','Mobile UX'],link:'https://www.notion.so/Reimagining-the-Mutual-Fund-Experience-for-Confident-Investing-2e81cde08e7080cfbbbeeaad5fd4e1b5'}]
   },
@@ -2411,7 +2436,7 @@ const locs = [
   },
   { id:'thane', name:'Ventura Securities', sub:'Product Design Leader · Thane · Jan 2025 – Present', type:'work', color:'#f4a637', icon:'📈', lat:19.2183, lng:72.9781,
     quote:'"At this level, design is strategy. Every call shapes the product roadmap."',
-    stats:[{num:'Head of',label:'Product Design'},{num:'5',label:'Products'}],
+    stats:[{num:'Lead',label:'Product Design'},{num:'5',label:'Products'}],
     day:[{t:'8:30',a:'Eastern Express Highway to Thane',n:'Long drive. Podcasts on strategy and market trends.'},{t:'10:00',a:'Cross-functional leadership sessions',n:'Design vision, strategy, and roadmap alignment.'},{t:'13:00',a:'Design critiques & product reviews',n:'Deep dives on live features — what\'s shipping, what\'s not, and why.'},{t:'15:00',a:'AI workflow explorations',n:'Integrating AI into prototyping and decision-making.'},{t:'19:30',a:'Drive back to Chembur',n:'Eastern Express in the evening. Long but predictable.'}],
     projects:[{title:'Trading & Options UX — Ventura Platform',year:'2025',desc:'Driving design vision and strategy for Ventura\'s trading and investing products. Simplified options strategies and trader journeys (MTF, alerts, orders, portfolio) to improve usability and engagement.',tags:['Trading UX','Options','Wealth Tech']},{title:'Ventura Design Library',year:'2025',desc:'Laid the foundation for Ventura\'s Design Library — ensuring consistency, accessibility, and scalability across all products. Integrated AI into design workflows for faster prototyping and insights.',tags:['Design System','AI Workflows','Accessibility']},{title:'Strategy Builder',year:'2025',desc:'Designed a visual options strategy builder for active traders — letting them construct, visualise, and execute multi-leg strategies without a finance degree. Complex derivatives made approachable.',tags:['Options','Strategy','Trading UX'],link:'https://www.notion.so/Ventura-Strategy-Builder-2fd1cde08e708048a1f7c727971c1845'}]
   },
@@ -2501,7 +2526,12 @@ function doOpenPanel(loc){
   document.getElementById('ph-eyebrow').textContent=labels[loc.type];
   document.getElementById('ph-name').textContent=loc.name;
   document.getElementById('ph-sub').textContent=loc.sub;
-  document.getElementById('ph-stats').innerHTML=(loc.stats||[]).map(s=>`<div class="p-stat"><div class="p-stat-num" style="color:${loc.color}">${s.num}</div><div class="p-stat-label">${s.label}</div></div>`).join('');
+  document.getElementById('ph-stats').innerHTML=(loc.stats||[]).map(s=>{
+    var isSP = s.label.toLowerCase().replace(/\s/g,'') === 'sideprojects';
+    var cls = isSP ? 'p-stat p-stat-clickable' : 'p-stat';
+    var extra = isSP ? ' style="cursor:pointer;" onclick="openSideProjects()"' : '';
+    return '<div class="' + cls + '"' + extra + '><div class="p-stat-num" style="color:' + loc.color + '">' + s.num + '</div><div class="p-stat-label">' + s.label + '</div></div>';
+  }).join('');
   const dayHTML=loc.day.map(d=>`<div class="tl-row"><div class="tl-t">${d.t}</div><div class="tl-dot" style="background:${loc.color};color:${loc.color}"></div><div><div class="tl-a">${d.a}</div>${d.n?`<div class="tl-n">${d.n}</div>`:''}</div></div>`).join('');
   const logoMap={'axisbank.com':'Axis Bank','dripcapital.com':'Drip Capital','venturasecurities.com':'Ventura Securities','oyster.com':'Oyster Living','isobar.com':'Isobar'};
 const locLogos={'dadar':'https://logo.clearbit.com/axisbank.com','andheri':'https://logo.clearbit.com/dripcapital.com','thane':'https://logo.clearbit.com/venturasecurities.com','borivali':'https://logo.clearbit.com/oyster.com','chembur':null,'matunga':null};
@@ -2560,6 +2590,7 @@ function backToLanding(){
   if(window.activeDeck)closeDeck(window.activeDeck);
   introGone=false;
 }
+
 function enterPortfolio(){
   setTimeout(function(){
     var lc = document.getElementById('left-cards');
