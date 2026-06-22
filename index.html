@@ -521,6 +521,23 @@ a.proj-link .proj-body { pointer-events:none; }
   font-family:var(--mono);font-size:8px;letter-spacing:.25em;
   text-transform:uppercase;color:rgba(232,224,208,0.35);margin-top:8px;
 }
+.deck-tabs{
+  display:flex;gap:4px;margin-top:14px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:30px;padding:3px;
+}
+.deck-tab{
+  font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+  padding:6px 16px;border-radius:24px;border:none;
+  background:transparent;color:rgba(232,224,208,0.4);
+  cursor:pointer;transition:background .2s,color .2s;
+}
+.deck-tab.active{
+  background:rgba(200,134,74,0.18);color:var(--accent);
+  border:1px solid rgba(200,134,74,0.3);
+}
+.deck-tab:not(.active):hover{color:rgba(232,224,208,0.75);}
 .deck-close{
   position:absolute;top:0;right:0;
   width:36px;height:36px;border-radius:50%;
@@ -1706,10 +1723,13 @@ a.proj-link .proj-body { pointer-events:none; }
 <div id="work-deck" class="card-deck">
   <div class="deck-header">
     <div class="deck-title"><em>Selected</em> Work</div>
-    <div class="deck-sub">Case studies &amp; writing</div>
+    <div class="deck-tabs">
+      <button class="deck-tab active" id="work-tab-cs" onclick="switchWorkTab('cs')">Case Studies</button>
+      <button class="deck-tab" id="work-tab-sp" onclick="switchWorkTab('sp')">Side Projects</button>
+    </div>
     <button class="deck-close" onclick="closeDeck('work-deck')">✕</button>
   </div>
-  <div class="deck-cards" id="work-cards"><div class="deck-count" id="work-count">4</div></div>
+  <div class="deck-cards" id="work-cards"><div class="deck-count" id="work-count"></div></div>
   <div class="deck-hint">Tap View to open · Swipe to browse</div>
 </div>
 
@@ -1911,6 +1931,15 @@ var work_data = [
     link: 'https://mymiski.vercel.app/'
   },
   {
+    ico: '🧠',
+    type: 'side-project',
+    co: 'Side Project · Building now',
+    title: 'Prysm',
+    desc: 'A learning app for product designers — spaced repetition, daily pushes, and a quiz mode to make design knowledge actually stick. Because bookmarking articles isn\'t learning.',
+    tags: ['Side Project', 'PWA', 'Built by me'],
+    link: 'https://tryprysm.vercel.app/'
+  },
+  {
     ico: '✍️',
     type: 'article',
     co: 'Medium · @chirragk',
@@ -2095,13 +2124,22 @@ function openCombined() {
   showDeck('charche-deck');
 }
 function openWork() {
-  buildDeck('work-deck','work-cards',work_data,'work');
+  var cs = work_data.filter(function(d){ return d.type !== 'side-project'; });
+  buildDeck('work-deck','work-cards',cs,'work');
+  document.getElementById('work-tab-cs').classList.add('active');
+  document.getElementById('work-tab-sp').classList.remove('active');
   showDeck('work-deck');
 }
 function openSideProjects() {
   var sp = work_data.filter(function(d){ return d.type === 'side-project'; });
   buildDeck('work-deck','work-cards',sp,'work');
+  document.getElementById('work-tab-cs').classList.remove('active');
+  document.getElementById('work-tab-sp').classList.add('active');
   showDeck('work-deck');
+}
+function switchWorkTab(tab) {
+  if(tab === 'sp') { openSideProjects(); }
+  else { openWork(); }
 }
 function openCharche(){
   buildDeck('charche-deck','charche-cards',reco_data,'charche');
