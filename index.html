@@ -2547,8 +2547,8 @@ map=map_;
 const pinBounds = L.latLngBounds(locs.map(l=>[l.lat,l.lng]));
 map.fitBounds(pinBounds, {padding:[80,80]});
   
-L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
-  maxZoom: 20,
+L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
+  maxZoom: 19,
   attribution: ''
 }).addTo(map);
   
