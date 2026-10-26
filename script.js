@@ -525,7 +525,10 @@ map=map_;
 // Fit map to show all pin locations with padding
 const pinBounds = L.latLngBounds(locs.map(l=>[l.lat,l.lng]));
 map.fitBounds(pinBounds, {padding:[80,80]});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:''}).addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
 function makeHeroPin(loc){
   const tc=`is-${loc.type}`;
