@@ -2516,7 +2516,7 @@ const locs = [
 const timeCfg = {
   all:       { overlay:'transparent',               ghost:'Mumbai',    sky:'transparent',skyOpacity:0,
     vignette:'radial-gradient(ellipse 80% 72% at 50% 52%,transparent 0%,transparent 38%,rgba(32,28,24,.45) 62%,rgba(28,25,22,.92) 100%)',
-    tileFilter:'saturate(0.5) brightness(0.85) sepia(0.35) hue-rotate(5deg) contrast(1.15)',
+   tileFilter:'saturate(0) brightness(0.65) contrast(1.45)',
     toastIco:'🗺️',toastLabel:'Overview',toastSub:'The full picture' },
 
   morning:   { overlay:'rgba(255,160,60,0.06)',     ghost:'सुबह',     sky:'linear-gradient(to bottom,rgba(255,140,30,0.22) 0%,rgba(255,180,80,0.08) 50%,transparent 100%)',skyOpacity:1,
@@ -2550,8 +2550,9 @@ map=map_;
 const pinBounds = L.latLngBounds(locs.map(l=>[l.lat,l.lng]));
 map.fitBounds(pinBounds, {padding:[80,80]});
   
-L.maplibreGL({
-  style: 'https://tiles.openfreemap.org/styles/dark'
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  maxZoom: 16,
+  attribution: ''
 }).addTo(map);
   
 function makeHeroPin(loc){
