@@ -2550,9 +2550,8 @@ map=map_;
 const pinBounds = L.latLngBounds(locs.map(l=>[l.lat,l.lng]));
 map.fitBounds(pinBounds, {padding:[80,80]});
   
-L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: ''
+L.maplibreGL({
+  style: 'https://tiles.openfreemap.org/styles/dark'
 }).addTo(map);
   
 function makeHeroPin(loc){
