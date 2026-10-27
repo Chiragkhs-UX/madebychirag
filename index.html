@@ -2513,7 +2513,7 @@ const locs = [
 const timeCfg = {
   all:       { overlay:'transparent',               ghost:'Mumbai',    sky:'transparent',skyOpacity:0,
     vignette:'radial-gradient(ellipse 80% 72% at 50% 52%,transparent 0%,transparent 38%,rgba(32,28,24,.45) 62%,rgba(28,25,22,.92) 100%)',
-    tileFilter:'saturate(0.2) brightness(0.45) contrast(1.3) sepia(0.12)',
+    tileFilter:'saturate(0.15) brightness(0.35) contrast(1.3) sepia(0.08) blur(0.5px)',
     toastIco:'🗺️',toastLabel:'Overview',toastSub:'The full picture' },
 
   morning:   { overlay:'rgba(255,160,60,0.06)',     ghost:'सुबह',     sky:'linear-gradient(to bottom,rgba(255,140,30,0.22) 0%,rgba(255,180,80,0.08) 50%,transparent 100%)',skyOpacity:1,
@@ -2546,7 +2546,11 @@ map=map_;
 // Fit map to show all pin locations with padding
 const pinBounds = L.latLngBounds(locs.map(l=>[l.lat,l.lng]));
 map.fitBounds(pinBounds, {padding:[80,80]});
-L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark_nolabels/{z}/{x}/{y}{r}.png', {
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?variant=nolabels', {
+  subdomains: 'abcd',
+  maxZoom: 20,
+  attribution: ''
+}).addTo(map);
   maxZoom: 20,
   attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
 }).addTo(map);
