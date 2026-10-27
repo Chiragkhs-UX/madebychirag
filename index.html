@@ -27,12 +27,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.21/leaflet-maplibre-gl.js"></script>
 <style>
-:root {
 :root {
   --bg:      #242018;
   --ink:     #f0e8d8;
@@ -58,26 +56,21 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 #cur-ring { position:fixed;top:0;left:0;width:32px;height:32px;border-radius:50%;border:1px solid rgba(200,134,74,0.28);pointer-events:none;z-index:99998;transform:translate(0,0);will-change:transform; }
 
 /* GRAIN */
-#grain {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 8000;
-  opacity: 0.045;
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.05'/%3E%3C/svg%3E");
-}
-/* DOT MATRIX OVERLAY */
+#grain { position:fixed;inset:0;pointer-events:none;z-index:8000;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.05'/%3E%3C/svg%3E"); }
 #dot-matrix {
   position: fixed;
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background-image: radial-gradient(rgba(240, 200, 140, 0.16) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(rgba(240, 200, 140, 0.15) 1.5px, transparent 1.5px);
   background-size: 26px 26px;
 }
 /* INTRO */
+#intro { position:fixed;inset:0;z-index:7000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.1s cubic-bezier(.16,1,.3,1); }
+  
+/* INTRO */
 #intro { position:fixed;inset:0;z-index:7000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.1s cubic-bezier(0.16,1,0.3,1),visibility 1.1s; }
-#intro.gone { opacity:0;visibility:hidden;pointer-events:none !important;display:none !important; }
+#intro.gone { opacity:0;visibility:hidden;pointer-events:none; }
 #intro::before { content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(232,224,208,0.025) 79px,rgba(232,224,208,0.025) 80px);pointer-events:none; }
 .intro-inner { position:relative;display:flex;flex-direction:column;align-items:center;text-align:center; }
 .intro-eyebrow { font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--accent);margin-bottom:22px;opacity:0;animation:fadeUp .8s .2s cubic-bezier(.16,1,.3,1) forwards; }
@@ -1566,7 +1559,7 @@ a.proj-link .proj-body { pointer-events:none; }
       <span class="intro-pill">Fintech · Wealth</span>
       <span class="intro-pill">B2C · B2B</span>
     </div>
-    <button id="enter-btn" onclick="const el=document.getElementById('intro');if(el){el.classList.add('gone');el.style.display='none';}if(typeof enterPortfolio==='function'){try{enterPortfolio();}catch(e){console.error(e);}}">Walk the city with me <span class="arr">→</span></button>
+    <button id="enter-btn" onclick="enterPortfolio()">Walk the city with me <span class="arr">→</span></button>
   </div>
   <div class="intro-footer">
     <span>Fintech · Trading · Banking · AI Tools</span>
@@ -1928,6 +1921,7 @@ a.proj-link .proj-body { pointer-events:none; }
 </div>
 
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ── DECK DATA ────────────────────────────────────────────────────────────
 // ── SELECTED WORK DATA ───────────────────────────────────────────────────
