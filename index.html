@@ -2550,11 +2550,13 @@ L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{
   maxZoom: 20,
   attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
 }).addTo(map);
+
 function makeHeroPin(loc){
-  const tc=`is-${loc.type}`;
-  const currentClass=loc.id==='thane'?' is-current':''; const html=`<div class="hero-pin-wrap ${tc}${currentClass}" style="--bubble-color:${loc.color};--bubble-glow:${loc.color}55"><div class="hero-bubble"><div class="bubble-bg"></div><div class="bubble-ring"></div><div class="bubble-inner"></div><div class="bubble-pulse"></div><div class="bubble-pulse2"></div><div class="bubble-icon">${loc.icon}</div></div><div class="pin-stem"></div><div class="pin-label"><div class="pin-label-name">${loc.name}</div><div class="pin-label-sub">${loc.type==='home'?'Home':loc.type==='work'?'Workplace':loc.type==='education'?'Education':'Life spot'}</div></div></div>`;
-  const sz=loc.type==='home'?[130,115]:[110,96];
-  return L.divIcon({html,className:'',iconSize:sz,iconAnchor:[sz[0]/2,sz[1]*.54]});
+  const tc = `is-${loc.type}`;
+  const currentClass = loc.id === 'thane' ? ' is-current' : '';
+  const html = `<div class="hero-pin-wrap ${tc}${currentClass}" style="--bubble-color:${loc.color};--bubble-glow:${loc.color}55"><div class="hero-bubble"><div class="bubble-bg"></div><div class="bubble-ring"></div><div class="bubble-inner"></div><div class="bubble-pulse"></div><div class="bubble-pulse2"></div><div class="bubble-icon">${loc.icon}</div></div><div class="pin-stem"></div><div class="pin-label"><div class="pin-label-name">${loc.name}</div><div class="pin-label-sub">${loc.type==='home'?'Home':loc.type==='work'?'Workplace':loc.type==='education'?'Education':'Life spot'}</div></div></div>`;
+  const sz = loc.type === 'home' ? [130, 115] : [110, 96];
+  return L.divIcon({html, className: '', iconSize: sz, iconAnchor: [sz[0] / 2, sz[1] * 0.54]});
 }
 locs.forEach(loc=>{
   const m=L.marker([loc.lat,loc.lng],{icon:makeHeroPin(loc),zIndexOffset:loc.type==='home'?200:100}).addTo(map);
