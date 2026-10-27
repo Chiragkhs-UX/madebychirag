@@ -57,7 +57,16 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 
 /* GRAIN */
 #grain { position:fixed;inset:0;pointer-events:none;z-index:8000;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px; }
-
+#map::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(240, 200, 140, 0.12) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+  
 /* INTRO */
 #intro { position:fixed;inset:0;z-index:7000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.1s cubic-bezier(0.16,1,0.3,1),visibility 1.1s; }
 #intro.gone { opacity:0;visibility:hidden;pointer-events:none; }
@@ -84,9 +93,8 @@ html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:va
 .leaflet-marker-pane,.leaflet-shadow-pane,.leaflet-overlay-pane { pointer-events:none !important; }
 .leaflet-marker-pane .hero-pin-wrap { pointer-events:all; }
 .leaflet-tile {
-  filter: saturate(0.2) brightness(0.68) contrast(1.35) sepia(0.15);
+  filter: saturate(0.25) brightness(0.82) contrast(1.18) sepia(0.18);
   transition: filter 0.4s ease;
-}
 }
 .leaflet-control-attribution,.leaflet-control-zoom,.leaflet-control-container { display:none!important; }
 .leaflet-popup { display:none!important; }
@@ -2524,7 +2532,7 @@ const timeCfg = {
     sky: 'transparent',
     skyOpacity: 0,
     vignette: 'radial-gradient(ellipse 80% 72% at 50% 52%,transparent 0%,transparent 38%,rgba(32,28,24,.45) 62%,rgba(28,25,22,.92) 100%)',
-    tileFilter: 'saturate(0.2) brightness(0.68) contrast(1.35) sepia(0.15)',
+    tileFilter: 'saturate(0.25) brightness(0.82) contrast(1.18) sepia(0.18)',
     toastIco: '🗺️',
     toastLabel: 'Overview',
     toastSub: 'The full picture'
@@ -2665,8 +2673,7 @@ document.getElementById('map').addEventListener('click',(e)=>{if(e._fromPin)retu
 
 function setTime(t){curTime=t;const cfg=timeCfg[t];document.getElementById('time-overlay').style.background=cfg.overlay;const sky=document.getElementById('sky');sky.style.background=cfg.sky;sky.style.opacity=cfg.skyOpacity;document.getElementById('vignette').style.background=cfg.vignette;document.getElementById('ghost').textContent=cfg.ghost;document.querySelectorAll('.tbtn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));styleTiles();showModeToast(cfg);}
 function showModeToast(cfg){const t=document.getElementById('mode-toast');t.innerHTML=`<span class="toast-ico">${cfg.toastIco}</span><span class="toast-label">${cfg.toastLabel}</span><span class="toast-sub">— ${cfg.toastSub}</span>`;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800);}
-function styleTiles(){const f=timeCfg[curTime]?.tileFilter || 'saturate(0.2) brightness(0.68) contrast(1.35) sepia(0.15)';document.querySelectorAll('.leaflet-tile').forEach(tile=>{tile.style.setProperty('filter', f, 'important');tile.style.transition='filter 0.4s ease';});}
-function backToLanding(){
+function styleTiles(){const f=timeCfg[curTime]?.tileFilter || 'saturate(0.25) brightness(0.82) contrast(1.18) sepia(0.18)';document.querySelectorAll('.leaflet-tile').forEach(tile=>{tile.style.setProperty('filter', f, 'important');tile.style.transition='filter 0.4s ease';});}
   document.getElementById('intro').classList.remove('gone');
   document.getElementById('map-ui').classList.remove('visible');
   document.getElementById('hud').classList.remove('visible');
