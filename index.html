@@ -2546,8 +2546,10 @@ map=map_;
 // Fit map to show all pin locations with padding
 const pinBounds = L.latLngBounds(locs.map(l=>[l.lat,l.lng]));
 map.fitBounds(pinBounds, {padding:[80,80]});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:''}).addTo(map);
-
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+  maxZoom: 20,
+  attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
+}).addTo(map);
 function makeHeroPin(loc){
   const tc=`is-${loc.type}`;
   const currentClass=loc.id==='thane'?' is-current':''; const html=`<div class="hero-pin-wrap ${tc}${currentClass}" style="--bubble-color:${loc.color};--bubble-glow:${loc.color}55"><div class="hero-bubble"><div class="bubble-bg"></div><div class="bubble-ring"></div><div class="bubble-inner"></div><div class="bubble-pulse"></div><div class="bubble-pulse2"></div><div class="bubble-icon">${loc.icon}</div></div><div class="pin-stem"></div><div class="pin-label"><div class="pin-label-name">${loc.name}</div><div class="pin-label-sub">${loc.type==='home'?'Home':loc.type==='work'?'Workplace':loc.type==='education'?'Education':'Life spot'}</div></div></div>`;
