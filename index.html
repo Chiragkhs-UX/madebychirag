@@ -46,7 +46,66 @@
 }
 *,*::before,*::after { margin:0;padding:0;box-sizing:border-box; }
 html,body { width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans); }
+/* --- Commute Routes & Career Flight Path --- */
+.commute-highway-path {
+  stroke: #c8864a;
+  stroke-width: 3.5px;
+  stroke-dasharray: 6, 8;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(200, 134, 74, 0.7));
+  animation: dashDrive 1.8s linear infinite;
+  opacity: 0.9;
+}
 
+@keyframes dashDrive {
+  from { stroke-dashoffset: 28; }
+  to { stroke-dashoffset: 0; }
+}
+
+.career-flight-arc {
+  stroke: #f39c12;
+  stroke-width: 2px;
+  stroke-dasharray: 4, 6;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 5px rgba(243, 156, 18, 0.6));
+}
+
+.flight-path-toggle {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(36, 32, 24, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 134, 74, 0.28);
+  border-radius: 30px;
+  padding: 5px 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.fp-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+.fp-btn:hover, .fp-btn.is-active {
+  color: var(--ink);
+  background: rgba(200, 134, 74, 0.2);
+  border: 1px solid var(--accent);
+}
+  
 /* CURSOR */
 #cur { position:fixed;top:0;left:0;width:11px;height:11px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:99999;transform:translate(0,0);will-change:transform;mix-blend-mode:screen;transition:width .18s,height .18s; }
 #cur.big { width:28px;height:28px;opacity:.45; }
@@ -1524,7 +1583,12 @@ a.proj-link .proj-body { pointer-events:none; }
 <div id="cur-ring"></div>
 <div id="grain"></div>
 <div id="city-glow"></div>
-
+<!-- Career & Highway Route Controls -->
+<div class="flight-path-toggle">
+  <span style="font-family:var(--mono);font-size:8.5px;letter-spacing:0.14em;color:var(--accent);">NAV:</span>
+  <button class="fp-btn" id="btn-career" onclick="toggleCareerArc(this)">Career Flight Path (2016–2026)</button>
+  <button class="fp-btn" id="btn-clear-route" onclick="clearCommuteRoute()">Reset Commute</button>
+</div>
 <div id="quote-loader" onclick="this.classList.add('gone');this.style.display='none';" style="cursor:pointer;">
   <div class="ql-inner">
     <div class="ql-mark">“</div>
@@ -2562,13 +2626,79 @@ function makeHeroPin(loc){
   const html = `<div class="hero-pin-wrap ${tc}${currentClass}" style="--bubble-color:${loc.color};--bubble-glow:${loc.color}55"><div class="hero-bubble"><div class="bubble-bg"></div><div class="bubble-ring"></div><div class="bubble-inner"></div><div class="bubble-pulse"></div><div class="bubble-pulse2"></div><div class="bubble-icon">${loc.icon}</div></div><div class="pin-stem"></div><div class="pin-label"><div class="pin-label-name">${loc.name}</div><div class="pin-label-sub">${loc.type==='home'?'Home':loc.type==='work'?'Workplace':loc.type==='education'?'Education':'Life spot'}</div></div></div>`;
   const sz = loc.type === 'home' ? [130, 115] : [110, 96];
   return L.divIcon({html, className: '', iconSize: sz, iconAnchor: [sz[0] / 2, sz[1] * 0.54]});
+}// --- HIGHWAY ROUTES & CAREER ARC ---
+const HIGHWAY_ROUTES = {
+  thane: [[19.0620,72.8980],[19.0735,72.9080],[19.0910,72.9230],[19.1250,72.9370],[19.1720,72.9560],[19.1980,72.9680],[19.2183,72.9781]],
+  drip: [[19.0620,72.8980],[19.0680,72.8810],[19.0760,72.8620],[19.0980,72.8540],[19.1136,72.8697]],
+  axis: [[19.0620,72.8980],[19.0520,72.8840],[19.0380,72.8610],[19.0178,72.8478]],
+  oyster: [[19.0620,72.8980],[19.0910,72.9230],[19.1300,72.9150],[19.1650,72.8550],[19.2150,72.8600],[19.2480,72.8590]]
+};
+
+let activeHighwayLayer = null;
+let activeFlightLayer = null;
+let careerActive = false;
+
+function driveAlongHighway(destKey) {
+  const points = HIGHWAY_ROUTES[destKey];
+  if (!points || !cretaMarker) return;
+  if (activeHighwayLayer) map.removeLayer(activeHighwayLayer);
+  activeHighwayLayer = L.polyline(points, { className: 'commute-highway-path' }).addTo(map);
+
+  let i = 0;
+  function step() {
+    if (i >= points.length - 1) return;
+    const start = points[i], end = points[i + 1];
+    const t0 = performance.now();
+    function anim(t) {
+      const p = Math.min((t - t0) / 320, 1);
+      cretaMarker.setLatLng([start[0] + (end[0] - start[0]) * p, start[1] + (end[1] - start[1]) * p]);
+      if (p < 1) requestAnimationFrame(anim);
+      else { i++; step(); }
+    }
+    requestAnimationFrame(anim);
+  }
+  step();
+}
+
+const CAREER_CHRONOLOGY = [
+  { id: 'oyster', year: '2016', name: 'Oyster Living', coords: [19.2480, 72.8590] },
+  { id: 'drip', year: '2019', name: 'Drip Capital', coords: [19.1136, 72.8697] },
+  { id: 'axis', year: '2021', name: 'Axis Bank', coords: [19.0178, 72.8478] },
+  { id: 'thane', year: '2025', name: 'Ventura', coords: [19.2183, 72.9781] }
+];
+
+function toggleCareerFlightPath(show) {
+  if (activeFlightLayer) { map.removeLayer(activeFlightLayer); activeFlightLayer = null; }
+  if (!show) return;
+  activeFlightLayer = L.layerGroup();
+  const poly = L.polyline(CAREER_CHRONOLOGY.map(c => c.coords), { className: 'career-flight-arc' });
+  activeFlightLayer.addLayer(poly);
+  CAREER_CHRONOLOGY.forEach(item => {
+    const badge = L.marker(item.coords, {
+      icon: L.divIcon({ html: `<div style="background:#1d1814;border:1px solid #c8864a;color:#f6c88f;font-family:monospace;font-size:8px;padding:1px 6px;border-radius:10px;white-space:nowrap;">${item.year} · ${item.name}</div>`, className: '', iconAnchor: [20, -16] }),
+      interactive: false
+    });
+    activeFlightLayer.addLayer(badge);
+  });
+  activeFlightLayer.addTo(map);
+}
+
+function toggleCareerArc(btn) {
+  careerActive = !careerActive;
+  btn.classList.toggle('is-active', careerActive);
+  toggleCareerFlightPath(careerActive);
+}
+
+function clearCommuteRoute() {
+  if (activeHighwayLayer) { map.removeLayer(activeHighwayLayer); activeHighwayLayer = null; }
+  if (cretaMarker) cretaMarker.setLatLng([19.0620, 72.8980]);
 }
 locs.forEach(loc=>{
   const m=L.marker([loc.lat,loc.lng],{icon:makeHeroPin(loc),zIndexOffset:loc.type==='home'?200:100}).addTo(map);
   m.on('mouseover',e=>showTooltip(loc,e.originalEvent));
   m.on('mousemove',e=>moveTooltip(e.originalEvent));
   m.on('mouseout',()=>hideTooltip());
-  m.on('click',(e)=>{L.DomEvent.stopPropagation(e);if(e.originalEvent){e.originalEvent._fromPin=true;}handlePinClick(loc);});
+  m.on('click',(e)=>{L.DomEvent.stopPropagation(e);if(e.originalEvent){e.originalEvent._fromPin=true;}if(typeof driveAlongHighway==='function'&&HIGHWAY_ROUTES[loc.id])driveAlongHighway(loc.id);handlePinClick(loc);});
   pinMarkers[loc.id]=m;
 });
 
