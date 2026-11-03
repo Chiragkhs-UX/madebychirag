@@ -1565,7 +1565,7 @@ a.proj-link .proj-body { pointer-events:none; }
  const anchors={oyster:[27,25],drip:[48,29],axis:[34,51],chembur:[55,45],thane:[79,31],borivali:[27,25],andheri:[48,29],dadar:[34,51]};
  let stage,svg,host,zoom=1,center=[50,50];const layers=new Set();
  const allPoints=()=>typeof locs!=='undefined'?locs:[];
- function xy(latlng){if(window.innerWidth<=768){const loc=allPoints().find(p=>Math.abs(p.lat-(latlng?.[0]??999))<.0001&&Math.abs(p.lng-(latlng?.[1]??999))<.0001);const mobileAnchors={oyster:[26.0,30.2],drip:[47.0,35.2],axis:[30.7,44.0],chembur:[57.0,42.1],thane:[75.0,35.0],borivali:[26.0,30.2],andheri:[47.0,35.2],dadar:[30.7,44.0]};if(loc&&mobileAnchors[loc.id])return mobileAnchors[loc.id];}if(latlng && Number.isFinite(latlng.stageX))return [latlng.stageX,latlng.stageY];const lat=+latlng[0],lng=+latlng[1];const exact=allPoints().find(p=>Math.abs(p.lat-lat)<.0001&&Math.abs(p.lng-lng)<.0001);if(exact&&anchors[exact.id])return anchors[exact.id];
+ function xy(latlng){if(window.innerWidth<=768){const loc=allPoints().find(p=>Math.abs(p.lat-(latlng?.[0]??999))<.0001&&Math.abs(p.lng-(latlng?.[1]??999))<.0001);const mobileAnchors={oyster:[26.0,19.7],drip:[46.9,28.6],axis:[30.6,44.2],chembur:[57.0,40.4],thane:[77.2,28.1],borivali:[26.0,19.7],andheri:[46.9,28.6],dadar:[30.6,44.2]};if(loc&&mobileAnchors[loc.id])return mobileAnchors[loc.id];}if(latlng && Number.isFinite(latlng.stageX))return [latlng.stageX,latlng.stageY];const lat=+latlng[0],lng=+latlng[1];const exact=allPoints().find(p=>Math.abs(p.lat-lat)<.0001&&Math.abs(p.lng-lng)<.0001);if(exact&&anchors[exact.id])return anchors[exact.id];
   const known=allPoints().filter(p=>anchors[p.id]);if(!known.length)return [50,50];let sx=0,sy=0,sw=0;
   for(const p of known){const d=Math.hypot((p.lat-lat)*1.0,(p.lng-lng)*1.0);const w=1/Math.pow(Math.max(d,.001),2);sx+=anchors[p.id][0]*w;sy+=anchors[p.id][1]*w;sw+=w;}return [sx/sw,sy/sw];}
  function redraw(){if(!stage)return;const rect=host.getBoundingClientRect();const sw=stage.offsetWidth,sh=stage.offsetHeight;const dx=(50-center[0])/100*sw*zoom,dy=(50-center[1])/100*sh*zoom;stage.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(${zoom})`;}
@@ -1576,7 +1576,7 @@ a.proj-link .proj-body { pointer-events:none; }
    set(x,y,z){
      if(!stage || window.innerWidth>768)return;
      zoom=Math.max(1,Math.min(2.65,z));
-     const maxX=Math.max(0,(zoom-1)*50/zoom), maxY=Math.max(0,(zoom-1)*50/zoom);
+     const maxX=38, maxY=38;
      center=[Math.max(50-maxX,Math.min(50+maxX,x)),Math.max(50-maxY,Math.min(50+maxY,y))];
      redraw();
    }
@@ -3472,7 +3472,7 @@ document.addEventListener('keydown', function(e) {
 <style id="mobile-pin-visual-restoration-v2">
 /* The portrait artwork is 941×2200: preserve its aspect ratio instead of stretching it. */
 @media(max-width:768px){
- #diorama-stage{width:max(100vw,calc(100dvh * 941 / 2200))!important;height:auto!important;aspect-ratio:941/2200!important;max-width:none!important;left:50%!important;top:50%!important;}
+ #diorama-stage{width:max(100vw,calc(100dvh * 941 / 1250))!important;height:auto!important;aspect-ratio:941/1250!important;max-width:none!important;left:50%!important;top:50%!important;}
  #mobile-diorama-art{width:100%!important;height:100%!important;object-fit:contain!important;image-rendering:auto!important;}
  /* Animated overlay rings sit directly above the illustrated pin icons. */
  #mobile-pin-effects{display:block!important;position:absolute;inset:0;pointer-events:none;z-index:43;}
@@ -3486,7 +3486,7 @@ document.addEventListener('keydown', function(e) {
 </style>
 <script id="mobile-pin-effects-init">
 (function(){
- const pins=[['oyster',26.0,33.1,'#6aa3d4'],['drip',47.0,38.1,'#6aa3d4'],['axis',30.7,46.9,'#6aa3d4'],['home',57.0,45.0,'#f7a93b'],['ventura',75.0,37.9,'#f7a93b']];
+ const pins=[['oyster',26.0,24.9,'#6aa3d4'],['drip',46.9,34.0,'#6aa3d4'],['axis',30.6,49.5,'#6aa3d4'],['home',57.0,45.5,'#f7a93b'],['ventura',77.2,33.0,'#7dab7a']];
  function install(){const stage=document.getElementById('diorama-stage');if(!stage||document.getElementById('mobile-pin-effects'))return;const layer=document.createElement('div');layer.id='mobile-pin-effects';for(const [id,x,y,c] of pins){const ring=document.createElement('span');ring.className='mobile-pin-halo';ring.dataset.location=id;ring.style.cssText=`left:${x}%;top:${y}%;--halo:${c}`;layer.appendChild(ring)}stage.appendChild(layer)}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{install();new MutationObserver(install).observe(document.getElementById('map')||document.body,{childList:true,subtree:true})});else install();
 })();
@@ -3495,8 +3495,8 @@ document.addEventListener('keydown', function(e) {
 <style id="mobile-map-framing-and-pin-alignment-20261103">
 @media (max-width:768px){
   #diorama-stage {
-    width:max(115vw,calc(100dvh * 941 / 2200))!important;
-    height:auto!important;aspect-ratio:941 / 2200!important;
+    width:max(115vw,calc(100dvh * 941 / 1250))!important;
+    height:auto!important;aspect-ratio:941 / 1250!important;
     max-width:none!important;left:50%!important;top:48%!important;
   }
   #mobile-diorama-art {width:100%!important;height:100%!important;object-fit:contain!important;}
@@ -3520,5 +3520,59 @@ document.addEventListener('keydown', function(e) {
 }
 @media(prefers-reduced-motion:reduce){.mobile-pin-halo,.mobile-pin-halo::after{animation:none!important}}
 </style>
+
+<style id="responsive-diorama-corrected-20261103">
+/* Portrait source is 941 x 1250. Pin locations are normalized to those exact pixels. */
+@media(max-width:768px){
+ #map{touch-action:none!important;}
+ #diorama-stage{width:125vw!important;height:auto!important;aspect-ratio:941 / 1250!important;top:47%!important;left:50%!important;transform-origin:center center!important;}
+ #mobile-diorama-art{width:100%!important;height:100%!important;object-fit:fill!important;image-rendering:auto!important;}
+ #mobile-pin-effects{position:absolute!important;inset:0!important;pointer-events:none!important;z-index:46!important;}
+ .mobile-pin-halo{width:7.1%!important;height:auto!important;aspect-ratio:1!important;border-width:1.5px!important;box-shadow:0 0 9px var(--halo)!important;transform:translate(-50%,-50%)!important;}
+ .mobile-pin-halo::after{inset:-22%!important;}
+ #diorama-stage .diorama-marker.pin-marker{opacity:0!important;z-index:48!important;pointer-events:auto!important;transform:translate(-50%,-50%)!important;min-width:42px!important;min-height:42px!important;}
+ #mobile-gesture-hint{font-size:10px!important;}
+}
+@media(max-width:390px) and (max-height:740px){#diorama-stage{width:132vw!important;}}
+@media(prefers-reduced-motion:reduce){.mobile-pin-halo,.mobile-pin-halo::after{animation:none!important;}}
+</style>
+<script id="mobile-diorama-interaction-repair">
+(function(){
+ function init(){
+  const map=document.getElementById('map');if(!map)return;
+  // Let touch gestures bubble through UI overlays without stealing taps on buttons.
+  const ui=document.getElementById('map-ui');if(ui){ui.addEventListener('pointerdown',e=>{
+   if(innerWidth>768||e.target.closest('button,a,[role="button"],.hero-pin-wrap,.diorama-marker'))return;
+   map.dispatchEvent(new PointerEvent('pointerdown',{pointerId:e.pointerId,pointerType:e.pointerType,clientX:e.clientX,clientY:e.clientY,bubbles:false}));
+  });}
+  // Tapping a visible halo activates its matching original pin, preserving detail drawers.
+  const aliases={oyster:'oyster',drip:'drip',axis:'axis',home:'chembur',ventura:'thane'};
+  map.addEventListener('click',e=>{
+   if(innerWidth>768||!e.target.classList?.contains('mobile-pin-halo'))return;
+   const name=aliases[e.target.dataset.location];const anchors={oyster:[26,19.7],drip:[46.9,28.6],axis:[30.6,44.2],chembur:[57,40.4],thane:[77.2,28.1]};
+   const a=anchors[name];const marker=[...document.querySelectorAll('#diorama-stage .diorama-marker.pin-marker')].find(m=>Math.abs(parseFloat(m.style.left)-a[0])<1&&Math.abs(parseFloat(m.style.top)-a[1])<1);
+   if(marker)marker.click();
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<style id="mobile-diagonal-composition-v3">
+/* Wider, off-axis portrait composition; stage and overlays transform together. */
+@media(max-width:768px){
+ #diorama-stage{width:143vw!important;aspect-ratio:941 / 1250!important;height:auto!important;left:54%!important;top:53%!important;transform-origin:center center!important;}
+ #mobile-diorama-art{object-fit:contain!important;}
+ #mobile-pin-effects{inset:0!important;}
+ .mobile-pin-halo{width:6.2%!important;}
+}
+@media(max-width:390px) and (max-height:740px){#diorama-stage{width:150vw!important;}}
+</style>
+<script id="mobile-diagonal-initial-camera-v3">
+(function(){
+ const start=()=>{if(innerWidth>768)return;const cam=window.__mumbaiGestureCamera;if(!cam)return;cam.set(50,50,1);};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(start));else requestAnimationFrame(start);
+})();
+</script>
 </body>
 </html>
