@@ -1568,7 +1568,7 @@ a.proj-link .proj-body { pointer-events:none; }
  function xy(latlng){if(window.innerWidth<=768){const loc=allPoints().find(p=>Math.abs(p.lat-(latlng?.[0]??999))<.0001&&Math.abs(p.lng-(latlng?.[1]??999))<.0001);const mobileAnchors={oyster:[26.0,19.7],drip:[46.9,28.6],axis:[30.6,44.2],chembur:[57.0,40.4],thane:[77.2,28.1],borivali:[26.0,19.7],andheri:[46.9,28.6],dadar:[30.6,44.2]};if(loc&&mobileAnchors[loc.id])return mobileAnchors[loc.id];}if(latlng && Number.isFinite(latlng.stageX))return [latlng.stageX,latlng.stageY];const lat=+latlng[0],lng=+latlng[1];const exact=allPoints().find(p=>Math.abs(p.lat-lat)<.0001&&Math.abs(p.lng-lng)<.0001);if(exact&&anchors[exact.id])return anchors[exact.id];
   const known=allPoints().filter(p=>anchors[p.id]);if(!known.length)return [50,50];let sx=0,sy=0,sw=0;
   for(const p of known){const d=Math.hypot((p.lat-lat)*1.0,(p.lng-lng)*1.0);const w=1/Math.pow(Math.max(d,.001),2);sx+=anchors[p.id][0]*w;sy+=anchors[p.id][1]*w;sw+=w;}return [sx/sw,sy/sw];}
- function redraw(){if(!stage)return;const rect=host.getBoundingClientRect();const sw=stage.offsetWidth,sh=stage.offsetHeight;const dx=(50-center[0])/100*sw*zoom,dy=(50-center[1])/100*sh*zoom;stage.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(${zoom})`;}
+ function redraw(){if(!stage)return;const sw=stage.offsetWidth,sh=stage.offsetHeight;const dx=(50-center[0])/100*sw*zoom,dy=(50-center[1])/100*sh*zoom;stage.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(${zoom})`;}
 
  // Mobile gesture camera: same normalized coordinate plane as interactive pins.
  window.__mumbaiGestureCamera = {
@@ -3431,7 +3431,9 @@ document.addEventListener('keydown', function(e) {
 </style>
 <script id="mobile-gesture-navigation-script">
 (function(){
- const active=new Map();let start=null, moved=false, suppressUntil=0;
+ const active=new Map();let start=null, moved=false, suppressUntil=0,resetTimer=null;
+ function cancelReset(){clearTimeout(resetTimer);resetTimer=null;}
+ function scheduleReset(){cancelReset();if(active.size)return;resetTimer=setTimeout(()=>{if(innerWidth>768||active.size||document.body.classList.contains('portfolio-panel-open'))return;const cam=window.__mumbaiGestureCamera;if(cam)cam.set(50,50,1);},3000);}
  const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
  const midpoint=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
  function init(){
@@ -3440,11 +3442,11 @@ document.addEventListener('keydown', function(e) {
   controls.innerHTML='<button type="button" aria-label="Zoom in" data-zoom="1">+</button><button type="button" aria-label="Zoom out" data-zoom="-1">−</button><button type="button" aria-label="Reset map view" data-reset="1" style="font-size:16px">⌖</button>';
   document.body.appendChild(controls);
   const hint=document.createElement('div');hint.id='mobile-gesture-hint';hint.textContent='Drag to explore · Pinch to zoom';document.body.appendChild(hint);
-  controls.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const cam=window.__mumbaiGestureCamera;if(!cam)return;const v=cam.get();if(b.dataset.reset)cam.set(50,50,1);else cam.set(v.center[0],v.center[1],v.zoom*(b.dataset.zoom==='1'?1.2:1/1.2));});
+  controls.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const cam=window.__mumbaiGestureCamera;if(!cam)return;const v=cam.get();cancelReset();if(b.dataset.reset)cam.set(50,50,1);else cam.set(v.center[0],v.center[1],v.zoom*(b.dataset.zoom==='1'?1.2:1/1.2));scheduleReset();});
   const points=()=>[...active.values()];
   map.addEventListener('pointerdown',e=>{
    if(innerWidth>768 || e.pointerType==='mouse' || e.target.closest('button,a,.hero-pin-wrap,.diorama-marker,[role="button"]'))return;
-   active.set(e.pointerId,{x:e.clientX,y:e.clientY});
+   cancelReset();active.set(e.pointerId,{x:e.clientX,y:e.clientY});
    try{map.setPointerCapture(e.pointerId)}catch(_){}
    const p=points(),cam=window.__mumbaiGestureCamera;if(!cam)return;
    const v=cam.get();start={v,p:p.map(q=>({...q})),mid:p.length===2?midpoint(p[0],p[1]):p[0],distance:p.length===2?dist(p[0],p[1]):1};moved=false;
@@ -3461,7 +3463,7 @@ document.addEventListener('keydown', function(e) {
    const w=map.clientWidth,h=map.clientHeight;
    cam.set(start.v.center[0]-(mid.x-start.mid.x)/Math.max(1,w)/z*100,start.v.center[1]-(mid.y-start.mid.y)/Math.max(1,h)/z*100,z);
   },{passive:false});
-  function end(e){if(!active.has(e.pointerId))return;active.delete(e.pointerId);if(moved)suppressUntil=Date.now()+320;const p=points(),cam=window.__mumbaiGestureCamera;if(p.length&&cam){const v=cam.get();start={v,p:p.map(q=>({...q})),mid:p[0],distance:1};}else start=null;}
+  function end(e){if(!active.has(e.pointerId))return;active.delete(e.pointerId);if(moved)suppressUntil=Date.now()+320;const p=points(),cam=window.__mumbaiGestureCamera;if(p.length&&cam){const v=cam.get();start={v,p:p.map(q=>({...q})),mid:p[0],distance:1};}else {start=null;scheduleReset();}}
   map.addEventListener('pointerup',end);map.addEventListener('pointercancel',end);
   map.addEventListener('click',e=>{if(Date.now()<suppressUntil){e.preventDefault();e.stopImmediatePropagation();}},true);
  }
@@ -3486,7 +3488,7 @@ document.addEventListener('keydown', function(e) {
 </style>
 <script id="mobile-pin-effects-init">
 (function(){
- const pins=[['oyster',26.0,24.9,'#6aa3d4'],['drip',46.9,34.0,'#6aa3d4'],['axis',30.6,49.5,'#6aa3d4'],['home',57.0,45.5,'#f7a93b'],['ventura',77.2,33.0,'#7dab7a']];
+ const pins=[['oyster',26.0,19.7,'#6aa3d4'],['drip',46.9,28.6,'#6aa3d4'],['axis',30.6,44.2,'#6aa3d4'],['home',57.0,40.4,'#f7a93b'],['ventura',77.2,28.1,'#7dab7a']];
  function install(){const stage=document.getElementById('diorama-stage');if(!stage||document.getElementById('mobile-pin-effects'))return;const layer=document.createElement('div');layer.id='mobile-pin-effects';for(const [id,x,y,c] of pins){const ring=document.createElement('span');ring.className='mobile-pin-halo';ring.dataset.location=id;ring.style.cssText=`left:${x}%;top:${y}%;--halo:${c}`;layer.appendChild(ring)}stage.appendChild(layer)}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{install();new MutationObserver(install).observe(document.getElementById('map')||document.body,{childList:true,subtree:true})});else install();
 })();
@@ -3572,6 +3574,28 @@ document.addEventListener('keydown', function(e) {
 (function(){
  const start=()=>{if(innerWidth>768)return;const cam=window.__mumbaiGestureCamera;if(!cam)return;cam.set(50,50,1);};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(start));else requestAnimationFrame(start);
+})();
+</script>
+
+<style id="mobile-pin-and-traffic-final-fix">
+/* Rings and touch markers use exactly the same portrait-image coordinates. */
+@media(max-width:768px){
+ .mobile-pin-halo{width:6.2%!important;}
+ #diorama-stage{transition:transform .55s cubic-bezier(.2,.75,.25,1)!important;}
+ #diorama-stage.is-gesturing{transition:none!important;}
+}
+/* Existing SVG road vehicles are present on both layouts; don't hide them on desktop. */
+@media(min-width:769px){
+ #ambient-traffic{display:block!important;opacity:.9!important;z-index:18!important;}
+ #ambient-traffic .traffic-desktop{display:inline!important;visibility:visible!important;}
+}
+@media(prefers-reduced-motion:reduce){#ambient-traffic{display:none!important}}
+</style>
+<script id="mobile-gesture-transition-fix">
+(function(){
+ const stage=()=>document.getElementById('diorama-stage');
+ document.addEventListener('pointerdown',e=>{if(innerWidth<=768&&e.target.closest('#map'))stage()?.classList.add('is-gesturing');},true);
+ for(const type of ['pointerup','pointercancel'])document.addEventListener(type,()=>{stage()?.classList.remove('is-gesturing');},true);
 })();
 </script>
 </body>
