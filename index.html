@@ -1702,6 +1702,108 @@ a.proj-link .proj-body { pointer-events:none; }
   #map-vignette{opacity:.08!important}
 }
 </style>
+
+<style id="editorial-experience-drawer-v1">
+/* Editorial experience: existing pin data and map interactions are preserved. */
+#panel{--paper:#f8f5ee;--paper-ink:#192b40;--paper-muted:#65748a;z-index:3300!important;width:min(520px,calc(100vw - 36px))!important;top:22px!important;bottom:22px!important;height:auto!important;right:22px!important;border:1px solid rgba(255,255,255,.68)!important;border-radius:27px!important;overflow:hidden;background:var(--paper)!important;color:var(--paper-ink)!important;box-shadow:0 25px 90px rgba(0,0,0,.57),0 0 0 1px rgba(0,0,0,.12)!important;transform:translateX(calc(100% + 48px))!important;transition:transform .55s cubic-bezier(.2,.8,.2,1)!important}
+#panel.open{transform:translateX(0)!important}
+#panel-bar{height:5px!important;flex-shrink:0}
+#panel-hero{padding:48px 34px 23px!important;background:radial-gradient(ellipse at 100% 0%,rgba(210,145,80,.14),transparent 55%),var(--paper)!important;border-bottom:1px solid #e4e0d7!important}
+#panel .p-eyebrow{font-size:10px!important;letter-spacing:.18em!important;margin-bottom:15px!important}
+#panel .p-name{font-family:var(--serif),Georgia,serif!important;font-weight:600!important;letter-spacing:-.035em!important;font-size:clamp(38px,4vw,57px)!important;line-height:1.02!important;color:var(--paper-ink)!important;margin:0 48px 10px 0!important}
+#panel .p-sub{color:#5c6b7c!important;font-size:10px!important;letter-spacing:.09em!important;line-height:1.65!important}
+#panel-close{position:absolute!important;top:18px!important;right:20px!important;left:auto!important;width:38px!important;height:38px!important;z-index:10!important;border-radius:50%!important;background:#ece9e3!important;color:#233448!important;border:0!important;display:grid!important;place-items:center!important;font-size:15px!important}
+#panel-close:hover{background:#d9d5cc!important;color:#111!important}
+#panel .p-stats{margin-top:21px!important;gap:8px!important;border:0!important;background:transparent!important;overflow:visible!important}
+#panel .p-stat{background:#eee8df!important;border:1px solid #e9dfd2!important;border-radius:12px!important;padding:12px 10px!important;min-width:0!important}
+#panel .p-stat-num{font-family:var(--sans)!important;font-size:20px!important;font-weight:600!important}
+#panel .p-stat-label{color:#69768a!important;letter-spacing:.04em!important;font-size:9px!important;line-height:1.35!important;margin-top:3px!important}
+#panel-body{background:var(--paper)!important;color:var(--paper-ink)!important;overscroll-behavior:contain!important;scrollbar-color:#d0c7ba transparent!important}
+#panel .panel-section{padding:23px 34px!important;border-bottom:1px solid #e5e0d7!important}
+#panel .p-quote{font-family:var(--serif),Georgia,serif!important;font-size:22px!important;font-style:normal!important;font-weight:500!important;line-height:1.35!important;color:#23374f!important;padding-left:16px!important}
+#panel .p-sec{color:#9b673b!important;font-size:9px!important;letter-spacing:.2em!important;margin-bottom:15px!important}
+#panel .p-sec:after{background:#e2dcd2!important}
+#panel .timeline{gap:5px!important}
+#panel .tl-row{padding-bottom:15px!important}
+#panel .tl-t{color:#91765e!important;font-size:9px!important;min-width:57px!important}
+#panel .tl-a{color:#24384f!important;font-size:13px!important;font-weight:500!important}
+#panel .tl-n{color:#69778b!important;font-size:12px!important;line-height:1.5!important}
+#panel .projects{gap:10px!important}
+#panel .proj{border:1px solid #e2dcd3!important;background:#fffdfa!important;border-radius:13px!important;overflow:hidden!important;box-shadow:0 2px 10px rgba(36,34,30,.035)!important}
+#panel .proj-header{background:#fffdfa!important;border-bottom:1px solid #eee9e1!important;padding:15px 16px 12px!important}
+#panel .proj-title{color:#23374f!important;font-family:var(--serif)!important;font-weight:600!important;font-size:20px!important}
+#panel .proj-year{color:#937b68!important}
+#panel .proj-body{padding:12px 16px 16px!important}
+#panel .proj-desc{color:#647287!important;font-size:12px!important;line-height:1.6!important}
+#panel .proj-tag{border:1px solid #e6ded4!important;color:#8a6d52!important;background:#f7f1e9!important;border-radius:20px!important;font-size:8px!important}
+#panel .proj-link:hover{border-color:#c79566!important;transform:translateY(-1px);transition:transform .2s,border-color .2s}
+#panel .editorial-drawer-topline{display:flex;align-items:center;gap:9px;margin-bottom:15px;color:#a67b54;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+#panel .editorial-drawer-topline:before{content:'';display:block;width:22px;height:1px;background:currentColor}
+#panel .editorial-drawer-footer{padding:18px 34px 25px;color:#8a96a2;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-align:center}
+@media(max-width:768px){
+ #panel{width:100%!important;max-width:none!important;top:auto!important;bottom:0!important;left:0!important;right:0!important;height:min(78dvh,790px)!important;border-radius:26px 26px 0 0!important;transform:translateY(105%)!important;box-shadow:0 -18px 80px rgba(0,0,0,.6)!important}
+ #panel.open{transform:translateY(0)!important}
+ #panel:before{content:'';position:absolute;z-index:11;top:9px;left:calc(50% - 20px);width:40px;height:4px;border-radius:5px;background:#c9c4bc}
+ #panel-hero{padding:35px 22px 17px!important}
+ #panel .p-name{font-size:38px!important}
+ #panel .panel-section{padding:20px 22px!important}
+ #panel .editorial-drawer-footer{padding:15px 22px 24px}
+ #panel-close{top:20px!important;right:18px!important}
+}
+@media(prefers-reduced-motion:reduce){#panel{transition:none!important}}
+</style>
+
+<style id="editorial-experience-drawer-dark-v2">
+/* Dark, compact version of the editorial experience drawer. */
+#panel{
+ --paper:#201e1c!important;--paper-ink:#f4eee6!important;--paper-muted:#b2a69b!important;
+ background:#201e1c!important;color:#f4eee6!important;
+ border:1px solid rgba(222,183,139,.26)!important;
+ box-shadow:0 25px 95px rgba(0,0,0,.76),0 0 0 1px rgba(255,255,255,.025)!important;
+}
+#panel-hero{
+ background:radial-gradient(ellipse at 100% 0%,rgba(200,134,74,.14),transparent 60%),#201e1c!important;
+ border-bottom:1px solid rgba(255,255,255,.095)!important;
+}
+#panel .p-name{color:#f7f0e7!important}
+#panel .p-sub{color:#a99e94!important}
+#panel-close{background:#34302d!important;color:#e8dbcc!important;border:1px solid rgba(255,255,255,.11)!important}
+#panel-close:hover{background:#4b3b30!important;color:#fff!important}
+#panel .p-stat{background:#2d2925!important;border:1px solid rgba(218,175,126,.14)!important}
+#panel .p-stat-num{color:#f1e5d5!important}
+#panel .p-stat-label{color:#a99d91!important}
+#panel-body{background:#201e1c!important;color:#f4eee6!important;scrollbar-color:#6b5646 transparent!important}
+#panel .panel-section{border-bottom:1px solid rgba(255,255,255,.09)!important}
+#panel .p-quote{color:#eadbc8!important;border-left-color:#c8864a!important}
+#panel .p-sec{color:#d5a36c!important}
+#panel .p-sec:after{background:rgba(255,255,255,.10)!important}
+#panel .tl-t{color:#b78c63!important}
+#panel .tl-a{color:#eae1d6!important}
+#panel .tl-n{color:#aea297!important}
+#panel .tl-row:not(:last-child):before{background:rgba(255,255,255,.12)!important}
+#panel .proj{background:#292622!important;border:1px solid rgba(255,255,255,.11)!important;box-shadow:0 3px 12px rgba(0,0,0,.16)!important}
+#panel .proj-header{background:#2d2925!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+#panel .proj-title{color:#f2e8dc!important}
+#panel .proj-year{color:#bca38b!important}
+#panel .proj-body{background:#292622!important}
+#panel .proj-desc{color:#b8aa9c!important}
+#panel .proj-tag{background:#3b3027!important;color:#e0b78b!important;border:1px solid rgba(200,134,74,.24)!important}
+#panel .proj-link:hover{border-color:#c79566!important}
+#panel .editorial-drawer-topline{color:#d5a36c!important}
+#panel .editorial-drawer-footer{color:#988b80!important}
+#panel .p-stat-clickable:hover{background:#3c332b!important}
+@media(max-width:768px){
+ #panel{height:min(56dvh,540px)!important;min-height:0!important;border-radius:25px 25px 0 0!important;bottom:0!important;}
+ #panel:before{background:#766b61!important}
+ #panel-hero{padding:29px 20px 14px!important}
+ #panel .p-name{font-size:32px!important;margin-bottom:7px!important}
+ #panel .p-stats{margin-top:12px!important}
+ #panel .p-stat{padding:9px 7px!important}
+ #panel .p-stat-num{font-size:17px!important}
+ #panel .panel-section{padding:17px 20px!important}
+ #panel-close{top:15px!important;right:16px!important}
+}
+</style>
 </head>
 <body>
 <div id="cur"></div>
@@ -3125,6 +3227,8 @@ document.addEventListener('click', e => {
   // -- Idle hint --
   // Subtle Creta-style horn via Web Audio API
   function playPopSound(){
+    if(document.hidden || !document.hasFocus() || sessionStorage.getItem("chirag_horn_once")) return;
+    sessionStorage.setItem("chirag_horn_once", "1");
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const t = ctx.currentTime;
@@ -3199,6 +3303,7 @@ document.addEventListener('click', e => {
     setTimeout(function(){ h.classList.remove('hide'); }, 220);
     hintVisible = false;
     clearTimeout(hintDismissTimer);
+    sessionStorage.setItem("chirag_hint_decided", "1");
     resetIdle();
   }
   function resetIdle(){
@@ -3210,7 +3315,10 @@ document.addEventListener('click', e => {
       setTimeout(()=>hintEl.classList.remove('hide'), 220);
       hintVisible=false;
     }
+    if(sessionStorage.getItem("chirag_hint_decided") || sessionStorage.getItem("chirag_hint_shown")) return;
     idleTimer = setTimeout(function(){
+      if(document.hidden || !document.hasFocus()) return;
+      if(sessionStorage.getItem("chirag_hint_shown") || sessionStorage.getItem("chirag_hint_decided")) return;
       if(!introGone) return;
       if(document.getElementById('iam-overlay').classList.contains('show')) return;
       if(panelOpen) return;
@@ -3218,21 +3326,12 @@ document.addEventListener('click', e => {
       hintText.textContent = prompts[promptIdx % prompts.length];
       promptIdx++;
       positionHint(mouseX, mouseY);
+      sessionStorage.setItem("chirag_hint_shown", "1");
       playPopSound();
-      setTimeout(playPopSound, 380);
       hintEl.classList.remove('hide');
       hintEl.classList.add('show');
       hintVisible = true;
-      // Auto-dismiss after 4 seconds regardless of mouse
-      clearTimeout(hintDismissTimer);
-      hintDismissTimer = setTimeout(function(){
-        if(!hintVisible) return;
-        hintEl.classList.remove('show');
-        hintEl.classList.add('hide');
-        setTimeout(function(){ hintEl.classList.remove('hide'); }, 220);
-        hintVisible = false;
-        resetIdle();
-      }, 8000);
+      // Remain visible until the visitor explicitly chooses an option.
     }, IDLE_MS);
   }
 
@@ -3241,8 +3340,12 @@ document.addEventListener('click', e => {
     if(hintVisible) return; // popup is showing — ignore mouse movement
     resetIdle();
   });
-  document.addEventListener('mousedown', resetIdle);
-  document.addEventListener('touchstart', resetIdle, {passive:true});
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){clearTimeout(idleTimer);cancelPress();}
+    else if(!hintVisible) resetIdle();
+  });
+  document.addEventListener('mousedown', function(){if(!hintVisible)resetIdle();});
+  document.addEventListener('touchstart', function(){if(!hintVisible)resetIdle();}, {passive:true});
 
   // -- Long press on map (not pins) --
   function isOnPin(el){
@@ -3596,6 +3699,79 @@ document.addEventListener('keydown', function(e) {
  const stage=()=>document.getElementById('diorama-stage');
  document.addEventListener('pointerdown',e=>{if(innerWidth<=768&&e.target.closest('#map'))stage()?.classList.add('is-gesturing');},true);
  for(const type of ['pointerup','pointercancel'])document.addEventListener(type,()=>{stage()?.classList.remove('is-gesturing');},true);
+})();
+</script>
+
+<script id="editorial-experience-drawer-script">
+(function(){
+ const panel=document.getElementById('panel');
+ if(!panel)return;
+ panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','false');panel.setAttribute('aria-label','Work and life chapter');panel.setAttribute('aria-hidden','true');
+ const close= document.getElementById('panel-close');
+ close.setAttribute('role','button');close.setAttribute('tabindex','0');close.setAttribute('aria-label','Close experience drawer');
+ close.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();closePanel()}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))closePanel()});
+ // Reuse the original pin click -> panel content code; enrich only the presentation.
+ const body=document.getElementById('panel-body');
+ const observer=new MutationObserver(()=>{
+   if(!body.querySelector('.panel-section')||body.querySelector('.editorial-drawer-footer'))return;
+   const footer=document.createElement('div');footer.className='editorial-drawer-footer';footer.textContent='A chapter from the journey · Tap × to return to Mumbai';body.appendChild(footer);
+ });
+ observer.observe(body,{childList:true});
+ // Mobile sheet: swipe down on the header to close without interfering with scrolling.
+ let start=null;
+ panel.addEventListener('touchstart',e=>{if(e.touches.length===1&&e.target.closest('#panel-hero'))start={y:e.touches[0].clientY,x:e.touches[0].clientX};else start=null},{passive:true});
+ panel.addEventListener('touchend',e=>{if(!start||!e.changedTouches.length)return;const dy=e.changedTouches[0].clientY-start.y,dx=e.changedTouches[0].clientX-start.x;start=null;if(dy>90&&Math.abs(dx)<80&&matchMedia('(max-width:768px)').matches)closePanel()},{passive:true});
+})();
+</script>
+
+<style id="chirag-map-continuity-and-bio">
+/* Keep the surrounding canvas in the map's own palette when panning. */
+#map{background:#101a1c!important;isolation:isolate}
+#chirag-map-backdrop{position:absolute;inset:-5%;width:110%;height:110%;z-index:0;pointer-events:none;overflow:hidden;background:#101a1c}
+#chirag-map-backdrop img{width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(28px) brightness(.48) saturate(.9);transform:scale(1.12);opacity:.9}
+#diorama-stage{z-index:1}
+@media(max-width:768px){#chirag-map-backdrop img{filter:blur(25px) brightness(.56) saturate(.88);object-position:center 44%}}
+#iam-idle-hint.show{pointer-events:auto!important}
+</style>
+<script id="chirag-map-continuity-and-bio-js">
+(function(){
+ function setupBackdrop(){
+   const map=document.getElementById('map');if(!map||document.getElementById('chirag-map-backdrop'))return;
+   const bg=document.createElement('div');bg.id='chirag-map-backdrop';
+   const im=document.createElement('img');im.alt='';im.setAttribute('aria-hidden','true');
+   bg.appendChild(im);map.insertBefore(bg,map.firstChild);
+   function choose(){
+     const mobile=window.matchMedia('(max-width:768px)').matches;
+     const source=document.getElementById(mobile?'mobile-diorama-art':'diorama-art')||document.getElementById('diorama-art');
+     if(source&&source.src&&im.src!==source.src)im.src=source.src;
+   }
+   choose();window.addEventListener('resize',choose,{passive:true});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupBackdrop);else setupBackdrop();
+ // Pointer-based long press works on desktop and mobile, even if map UI layers cover the stage.
+ let timer=null,initial=null,pressed=false;
+ const ignore='button,a,input,textarea,select,[role="button"],.hero-pin-wrap,.diorama-marker,.pin-label,#iam-overlay,#iam-idle-hint,#panel,#action-bar,#nameplate,#profile-card,.card-deck,#mobile-gesture-controls,#mobile-gesture-hint,#hud,#time-filter,.experience-drawer,.editorial-drawer';
+ function cancel(){clearTimeout(timer);timer=null;initial=null;}
+ document.addEventListener('pointerdown',function(e){
+   if(e.button!==0 || !document.getElementById('map-ui')?.classList.contains('visible'))return;
+   if(e.target.closest(ignore))return;
+   if(document.querySelector('#iam-overlay.show'))return;
+   initial={id:e.pointerId,x:e.clientX,y:e.clientY};pressed=false;
+   clearTimeout(timer);
+   timer=setTimeout(function(){
+     if(!initial||document.hidden)return;
+     pressed=true;cancel();
+     if(typeof window.openIam==='function')window.openIam();
+   },750);
+ },true);
+ document.addEventListener('pointermove',function(e){if(initial&&e.pointerId===initial.id&&Math.hypot(e.clientX-initial.x,e.clientY-initial.y)>12)cancel();},true);
+ ['pointerup','pointercancel','scroll'].forEach(n=>document.addEventListener(n,cancel,true));
+ document.addEventListener('contextmenu',function(e){if(pressed&&e.target.closest('#map'))e.preventDefault();},true);
+ // Prevent any idle audio in background tabs, and keep the one-time invitation onscreen.
+ document.addEventListener('visibilitychange',function(){
+   if(document.hidden){cancel();const hint=document.getElementById('iam-idle-hint');if(hint)hint.classList.remove('show');}
+ });
 })();
 </script>
 </body>
