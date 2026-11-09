@@ -1576,7 +1576,11 @@ a.proj-link .proj-body { pointer-events:none; }
    set(x,y,z){
      if(!stage || window.innerWidth>768)return;
      zoom=Math.max(1,Math.min(2.65,z));
-     const maxX=38, maxY=38;
+      const viewport=document.getElementById('map');
+      const scaledW=stage.offsetWidth*zoom, scaledH=stage.offsetHeight*zoom;
+      const maxDX=Math.max(0,(scaledW-(viewport?.clientWidth||innerWidth))/2)*0.78;
+      const maxDY=Math.max(0,(scaledH-(viewport?.clientHeight||innerHeight))/2)*0.78;
+      const maxX=scaledW?maxDX/scaledW*100:0, maxY=scaledH?maxDY/scaledH*100:0;
      center=[Math.max(50-maxX,Math.min(50+maxX,x)),Math.max(50-maxY,Math.min(50+maxY,y))];
      redraw();
    }
@@ -2030,6 +2034,24 @@ html,body{background:#171b1a;color:var(--ink)}
 #map,#map-ui,#diorama-stage{background-color:#171b1a}
 #panel,.work-drawer,.pin-drawer,.deck,.drawer-panel{color:var(--ink)}
 @media(max-width:800px){#intro.cinematic-intro{overscroll-behavior:contain}}
+</style>
+
+<style id="mobile-map-continuous-pan-20261109">
+@media(max-width:768px){
+ /* A single oversized image plane, including the interactive pins, provides real map
+    content beyond all four screen edges. Never stretch the original illustration. */
+ #map{background:#262b2d!important;overflow:hidden!important;touch-action:none!important;}
+ #diorama-stage{
+   width:max(165vw,calc(155dvh * 941 / 1250))!important;
+   height:auto!important;aspect-ratio:941 / 1250!important;
+   max-width:none!important;transform-origin:center center!important;
+   transition:transform .18s cubic-bezier(.2,.8,.2,1)!important;
+ }
+ #mobile-diorama-art{width:100%!important;height:100%!important;object-fit:fill!important;}
+ #mobile-gesture-controls,#mobile-gesture-hint{display:none!important;}
+ #map-ui{touch-action:none!important;}
+}
+@media(prefers-reduced-motion:reduce){#diorama-stage{transition:none!important}}
 </style>
 </head>
 <body>
@@ -3786,16 +3808,11 @@ document.addEventListener('keydown', function(e) {
 (function(){
  const active=new Map();let start=null, moved=false, suppressUntil=0,resetTimer=null;
  function cancelReset(){clearTimeout(resetTimer);resetTimer=null;}
- function scheduleReset(){cancelReset();if(active.size)return;resetTimer=setTimeout(()=>{if(innerWidth>768||active.size||document.body.classList.contains('portfolio-panel-open'))return;const cam=window.__mumbaiGestureCamera;if(cam)cam.set(50,50,1);},3000);}
+ function scheduleReset(){cancelReset();if(active.size)return;resetTimer=setTimeout(()=>{if(innerWidth>768||active.size||document.body.classList.contains('portfolio-panel-open'))return;const cam=window.__mumbaiGestureCamera;if(cam)cam.set(50,50,1);},1500);}
  const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
  const midpoint=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2});
  function init(){
   const map=document.getElementById('map');if(!map)return;
-  const controls=document.createElement('div');controls.id='mobile-gesture-controls';
-  controls.innerHTML='<button type="button" aria-label="Zoom in" data-zoom="1">+</button><button type="button" aria-label="Zoom out" data-zoom="-1">−</button><button type="button" aria-label="Reset map view" data-reset="1" style="font-size:16px">⌖</button>';
-  document.body.appendChild(controls);
-  const hint=document.createElement('div');hint.id='mobile-gesture-hint';hint.textContent='Drag to explore · Pinch to zoom';document.body.appendChild(hint);
-  controls.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const cam=window.__mumbaiGestureCamera;if(!cam)return;const v=cam.get();cancelReset();if(b.dataset.reset)cam.set(50,50,1);else cam.set(v.center[0],v.center[1],v.zoom*(b.dataset.zoom==='1'?1.2:1/1.2));scheduleReset();});
   const points=()=>[...active.values()];
   map.addEventListener('pointerdown',e=>{
    if(innerWidth>768 || e.pointerType==='mouse' || e.target.closest('button,a,.hero-pin-wrap,.diorama-marker,[role="button"]'))return;
