@@ -2062,6 +2062,103 @@ html,body{background:#171b1a;color:var(--ink)}
 }
 @media(prefers-reduced-motion:reduce){#diorama-stage{transition:none!important}}
 </style>
+<style id="genie-auto-summon-fix">
+#genie-ritual{display:none!important}
+#ask-launch.genie-auto-rub .genie-icon{animation:genie-auto-magic .65s ease-in-out both!important}
+#ask-launch.genie-auto-rub:after{content:"✦ ✧ ✦";position:absolute;left:50%;top:-29px;transform:translateX(-50%);color:#f4c58f;font-size:18px;white-space:nowrap;pointer-events:none;animation:genie-magic-spark .65s ease-out both}
+@keyframes genie-auto-magic{0%{transform:rotate(0) scale(1)}25%{transform:rotate(-18deg) scale(.92)}50%{transform:rotate(19deg) scale(1.12)}75%{transform:rotate(-8deg) scale(1.05)}100%{transform:rotate(0) scale(1)}}
+@keyframes genie-magic-spark{from{opacity:0;transform:translate(-50%,15px) scale(.6)}40%{opacity:1}to{opacity:0;transform:translate(-50%,-14px) scale(1.2)}}
+#ask-launch{position:relative}
+@media(prefers-reduced-motion:reduce){#ask-launch.genie-auto-rub .genie-icon,#ask-launch.genie-auto-rub:after{animation:none!important}}
+</style>
+<style id="genie-pointer-and-mascot-fix">
+/* Keep the car cursor on the map, but restore the real pointer inside the Genie. */
+@media (hover:hover) and (pointer:fine) {
+  html body #ask-sheet, html body #ask-sheet *, html body #genie-tooltip,
+  html body #ask-launch, html body #ask-launch * {cursor:auto!important}
+  html body #ask-sheet button,html body #ask-sheet a,html body #ask-sheet [role="button"],
+  html body #ask-launch {cursor:pointer!important}
+  html body #ask-sheet input,html body #ask-sheet textarea {cursor:text!important}
+  body:has(#ask-sheet.visible) #cur,body:has(#ask-sheet.visible) #cur-ring{display:none!important}
+}
+/* A free-floating Genie, no surrounding circular button, border or halo. */
+#ask-launch {
+  background:transparent!important;border:0!important;outline:0!important;
+  box-shadow:none!important;border-radius:0!important;
+  width:64px!important;height:72px!important;padding:0!important;
+  overflow:visible!important;isolation:isolate;
+}
+#ask-launch::before,#ask-launch::after{box-shadow:none!important;border:0!important}
+#ask-launch .genie-icon {
+  display:inline-block!important;background:transparent!important;border:0!important;
+  box-shadow:none!important;font-size:43px!important;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.55));
+  transform-origin:50% 85%;
+}
+#ask-launch:hover,#ask-launch:focus-visible{background:transparent!important;box-shadow:none!important}
+#ask-launch:focus-visible .genie-icon{outline:2px solid #f0bd86;outline-offset:5px;border-radius:10px}
+@keyframes genieFloatClean{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+#ask-launch{animation:genieFloatClean 3.5s ease-in-out infinite!important}
+#ask-launch.genie-auto-rub{animation:none!important}
+#genie-tooltip{pointer-events:none!important}
+@media(max-width:768px){#ask-launch{width:60px!important;height:65px!important}}
+@media(prefers-reduced-motion:reduce){#ask-launch{animation:none!important}}
+</style>
+
+<style id="portfolio-responsive-system-20261112">
+/* Fluid, viewport-safe sizing across desktop, laptop, tablet and phones. */
+:root{--ui-gutter:clamp(12px,2vw,28px);--ui-radius:clamp(14px,1.6vw,24px)}
+html,body{max-width:100%;overflow-x:hidden}
+#ask-sheet,#ask-sheet *{box-sizing:border-box}
+#ask-sheet{
+ position:fixed!important;top:auto!important;left:auto!important;
+ right:clamp(12px,2.5vw,32px)!important;
+ bottom:clamp(64px,9vh,96px)!important;
+ width:min(460px,calc(100vw - 2 * var(--ui-gutter)))!important;
+ height:min(740px,calc(100dvh - clamp(82px,12vh,124px)))!important;
+ max-height:calc(100dvh - clamp(82px,12vh,124px))!important;
+ min-height:0!important;overflow:hidden!important;
+ border-radius:var(--ui-radius)!important;
+ flex-direction:column!important;
+ font-size:clamp(12px,0.85vw + 6px,14px)!important;
+ isolation:isolate;
+}
+#ask-sheet.visible{display:flex!important}
+#ask-head{flex:0 0 auto!important;min-height:65px;padding:clamp(12px,1.5vw,18px)!important;gap:12px;position:relative;z-index:2}
+#ask-head>div{min-width:0;flex:1}
+#ask-head strong{font-size:clamp(15px,1.2vw,18px)!important}
+#ask-close{flex:0 0 42px!important;width:42px!important;height:42px!important;display:grid!important;place-items:center!important;line-height:1!important;position:relative!important;inset:auto!important;z-index:10!important;cursor:pointer!important;touch-action:manipulation}
+#genie-tabs{flex:0 0 auto!important;display:flex!important;gap:clamp(6px,1vw,10px)!important;padding:clamp(8px,1vw,12px)!important;min-height:0}
+#genie-tabs button{min-width:0!important;flex:1 1 0!important;font-size:clamp(11px,1vw,13px)!important;padding:clamp(9px,1vw,12px) 6px!important;white-space:normal;line-height:1.25}
+#ask-messages{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain;padding:clamp(12px,1.5vw,18px)!important;scrollbar-width:thin}
+#ask-messages .ask-bubble{max-width:95%;font-size:clamp(12px,1vw,14px);line-height:1.55;overflow-wrap:anywhere}
+#ask-suggestions{flex:0 0 auto!important;max-height:95px;overflow-y:auto;padding:6px clamp(12px,1.5vw,18px) 10px!important;gap:6px!important}
+#ask-suggestions button{font-size:clamp(10px,.9vw,12px)!important;padding:7px 9px!important}
+#ask-action{flex:0 0 auto!important;max-height:90px;overflow:auto}
+#ask-compose{flex:0 0 auto!important;padding:clamp(9px,1.1vw,13px)!important;gap:clamp(6px,.8vw,9px)!important}
+#ask-input{width:0!important;min-width:0!important;flex:1 1 auto!important;font-size:clamp(12px,1vw,14px)!important;padding:clamp(9px,1vw,12px)!important}
+#ask-send,#ask-mic{flex:0 0 clamp(38px,3vw,46px)!important;min-height:40px!important;padding:0!important}
+#ask-note{flex:0 0 auto!important;padding:0 clamp(12px,1.5vw,18px) 10px!important;font-size:clamp(9px,.75vw,11px)!important;line-height:1.4}
+#genie-story{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow-y:auto!important;padding:clamp(14px,1.6vw,22px)!important;font-size:clamp(12px,1vw,14px)!important}
+#genie-story h3{font-size:clamp(23px,2.1vw,30px)!important}
+#ask-sheet.story-mode #genie-story.active{display:block!important}
+#ask-launch{z-index:100003!important}
+@media(min-width:1600px){#ask-sheet{width:min(510px,32vw)!important;height:min(780px,calc(100dvh - 118px))!important}}
+@media(max-width:1024px){#ask-sheet{right:14px!important;bottom:72px!important;width:min(440px,calc(100vw - 28px))!important;height:min(690px,calc(100dvh - 88px))!important;max-height:calc(100dvh - 88px)!important}}
+@media(max-width:640px){
+ #ask-sheet{left:8px!important;right:8px!important;bottom:max(8px,env(safe-area-inset-bottom))!important;top:auto!important;width:calc(100vw - 16px)!important;height:min(690px,calc(100dvh - 20px - env(safe-area-inset-top)))!important;max-height:calc(100dvh - 20px - env(safe-area-inset-top))!important;border-radius:18px!important}
+ #ask-head{min-height:60px;padding:10px 12px!important}
+ #ask-head strong{font-size:16px!important}
+ #genie-tabs{padding:8px 10px!important}
+ #ask-messages{padding:12px!important}
+ #ask-suggestions{max-height:88px;padding:6px 12px 9px!important}
+ #ask-note{padding:0 12px 8px!important}
+ #ask-launch{right:14px!important;bottom:max(18px,env(safe-area-inset-bottom))!important}
+ #genie-tooltip{right:76px!important;bottom:83px!important;max-width:calc(100vw - 100px)}
+}
+@media(max-height:680px) and (min-width:641px){#ask-sheet{bottom:12px!important;height:calc(100dvh - 24px)!important;max-height:calc(100dvh - 24px)!important}#ask-suggestions{max-height:58px}#ask-head{min-height:52px;padding:8px 14px!important}#ask-note{display:none}}
+@media(max-height:540px){#ask-sheet{top:6px!important;bottom:6px!important;height:calc(100dvh - 12px)!important;max-height:calc(100dvh - 12px)!important}#ask-suggestions{max-height:42px}#ask-note{display:none}}
+</style>
 </head>
 <body>
 <div id="cur"></div>
@@ -4174,5 +4271,186 @@ document.addEventListener('keydown', function(e) {
  }
 }
 </style>
+<style id="ask-chirag-style">
+#ask-launch{position:fixed;right:22px;bottom:24px;z-index:99990;border:1px solid rgba(255,208,165,.42);background:#27232b;color:#fff0df;border-radius:100px;padding:13px 18px;font:600 13px Inter,Arial,sans-serif;box-shadow:0 12px 35px #0007;cursor:pointer;display:flex;align-items:center;gap:9px}#ask-launch:hover{background:#493542}#ask-sheet{position:fixed;right:22px;bottom:84px;z-index:99991;width:min(420px,calc(100vw - 28px));max-height:min(78dvh,680px);display:none;flex-direction:column;border:1px solid #bd8e715c;border-radius:22px;background:#242129;color:#fceee1;box-shadow:0 25px 80px #000b;font:14px/1.5 Inter,Arial,sans-serif;overflow:hidden}#ask-sheet.visible{display:flex;animation:ask-rise .24s ease-out}@keyframes ask-rise{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}#ask-head{padding:19px 20px 14px;border-bottom:1px solid #ffffff19;display:flex;justify-content:space-between;align-items:center}#ask-head strong{font-size:17px}#ask-close{background:none;border:0;color:#fceee1;font-size:23px;cursor:pointer}#ask-messages{overflow:auto;min-height:140px;padding:17px 19px;display:flex;flex-direction:column;gap:12px} .ask-bubble{border-radius:14px;padding:12px 14px;max-width:95%;animation:ask-rise .25s ease-out;white-space:pre-line}.ask-user{align-self:flex-end;background:#74513f;color:white}.ask-bot{align-self:flex-start;background:#38313a;color:#fff2e4}.ask-bot b{color:#ffcd9e}#ask-suggestions{display:flex;flex-wrap:wrap;gap:7px;padding:0 18px 12px}#ask-suggestions button{background:#ffffff0b;border:1px solid #ffffff33;border-radius:30px;color:#fceee1;padding:7px 10px;font:12px Inter,Arial;cursor:pointer}#ask-compose{display:flex;gap:8px;padding:13px;border-top:1px solid #ffffff22}#ask-input{flex:1;min-width:0;border:1px solid #ffffff3b;background:#19171d;color:white;border-radius:12px;padding:12px;font:14px Inter,Arial;outline:none}#ask-input:focus{border-color:#f4b584}#ask-send,#ask-mic{border:0;border-radius:11px;padding:0 13px;background:#dba476;color:#251c1b;font-weight:700;cursor:pointer}#ask-mic{background:#403640;color:#fff1e3;border:1px solid #ffffff2b}#ask-mic.listening{background:#ad534e}#ask-action{display:none;margin:0 18px 14px;border:1px solid #dba47666;border-radius:10px;background:#654631;color:#fff4e9;padding:10px;text-align:left;cursor:pointer}#ask-action.visible{display:block}#ask-note{font-size:11px;color:#c6b3a8;padding:0 18px 12px}@media(max-width:768px){#ask-launch{bottom:18px;right:14px;padding:12px 14px}#ask-sheet{right:10px;bottom:75px;width:calc(100vw - 20px);max-height:75dvh}}
+</style>
+<button id="ask-launch" type="button" aria-label="Ask about Chirag">✦ &nbsp; Ask about Chirag <span aria-hidden="true">🎙</span></button>
+<section id="ask-sheet" role="dialog" aria-label="Ask about Chirag" aria-modal="false"><div id="ask-head"><div><strong>Ask about Chirag</strong><div style="font-size:11px;color:#cdb7a9">Speak to search · Read to explore</div></div><button id="ask-close" aria-label="Close">×</button></div><div id="ask-messages" aria-live="polite"><div class="ask-bubble ask-bot">Hey! Ask me about Chirag's work, career, AI projects or leadership style. I'll find the relevant story.</div></div><div id="ask-suggestions"><button data-ask="Tell me about Ventura">Ventura experience</button><button data-ask="What is his leadership style?">Leadership style</button><button data-ask="Show his AI projects">AI projects</button><button data-ask="Where has he worked?">Career journey</button></div><button id="ask-action" type="button"></button><form id="ask-compose"><input id="ask-input" autocomplete="off" placeholder="Ask about his experience…" aria-label="Your question"><button type="button" id="ask-mic" title="Speak your question" aria-label="Speak your question">🎙</button><button type="submit" id="ask-send" aria-label="Send question">➜</button></form><div id="ask-note">Answers use curated portfolio information. Voice input depends on browser support.</div></section>
+<script id="ask-chirag-script">
+(function(){
+const $=id=>document.getElementById(id),sheet=$('ask-sheet'),input=$('ask-input'),messages=$('ask-messages'),action=$('ask-action');
+$('ask-launch').onclick=()=>{sheet.classList.toggle('visible');if(sheet.classList.contains('visible'))input.focus()};$('ask-close').onclick=()=>sheet.classList.remove('visible');
+function bubble(t,kind){const e=document.createElement('div');e.className='ask-bubble '+(kind==='user'?'ask-user':'ask-bot');e.textContent=t;messages.appendChild(e);messages.scrollTop=messages.scrollHeight}
+function cta(label,fn){action.textContent=label+' →';action.classList.add('visible');action.onclick=fn}
+function loc(id){try{const l=typeof locs!=='undefined'?locs.find(x=>x.id===id):null;if(l&&typeof handlePinClick==='function'){if(typeof introGone!=='undefined'&&!introGone&&typeof enterPortfolio==='function'){const enter=document.querySelector('.ci-enter');if(enter)enter.click();setTimeout(()=>handlePinClick(l),1100)}else handlePinClick(l);sheet.classList.remove('visible');return true}}catch(e){console.warn(e)}return false}
+const questions=[
+{test:/ventura|current role|current company|head of product design/i,answer:'At Ventura Securities, Chirag has led product design across trading and wealth experiences. His work includes improving information architecture, strengthening design systems, building research practices, and coordinating product, design and engineering teams.',label:'Open Ventura experience',act:()=>loc('thane')},
+{test:/axis|freecharge|bank|securities before/i,answer:'At Axis Bank and Freecharge, Chirag worked on financial product experiences, including trading, personal finance management and design systems, while contributing to design at scale.',label:'Open Axis experience',act:()=>loc('dadar')},
+{test:/drip|tradehub|cross.border/i,answer:'At Drip Capital, Chirag worked on cross-border finance experiences, including Tradehub and reusable product patterns.',label:'Open Drip Capital',act:()=>loc('andheri')},
+{test:/oyster|real estate|first job/i,answer:'Oyster Living was an early chapter in Chirag’s product design journey, working in real-estate technology.',label:'Open Oyster Living',act:()=>loc('borivali')},
+{test:/lead|mentor|team|management|decision|gamif|scenario/i,answer:'Chirag’s leadership approach emphasizes clarity over urgency, coaching over micromanagement, and shared decisions across design, product and engineering. Try a short decision scenario to explore the trade-offs.',label:'Try a leadership decision',act:leadership},
+{test:/ai|miski|prysm|side project|build|llm/i,answer:'Chirag experiments with AI and independent products. Miski is a reflection and good-deeds app; Prysm turns notes into a learning feed with spaced-repetition quizzes. These projects show how he explores ideas beyond his day job.',label:'Explore selected work',act:()=>{if(typeof openWork==='function'){openWork();sheet.classList.remove('visible')}}},
+{test:/career|experience|where.*work|journey|timeline/i,answer:'Chirag’s career spans Oyster Living, Drip Capital, Axis Bank / Freecharge, and Ventura Securities—moving from hands-on product design to leading teams and product direction.',label:'Explore the career map',act:()=>{sheet.classList.remove('visible');const e=document.querySelector('.ci-enter');if(e&&typeof introGone!=='undefined'&&!introGone)e.click()}},
+{test:/contact|email|reach|hire/i,answer:'You can connect with Chirag through the contact links on his portfolio. I won’t invent an email address or contact details.',label:'View portfolio',act:()=>sheet.classList.remove('visible')}
+];
+function leadership(){action.classList.remove('visible');bubble('Scenario: A stakeholder requests a major redesign in three days, but the team is already at capacity. What would you do?\n\nA — Push the team\nB — Negotiate scope\nC — Decline the request\n\nType A, B or C to explore the trade-off.','bot');window.askLeadership=true}
+function ask(q){q=(q||'').trim();if(!q)return;input.value='';bubble(q,'user');action.classList.remove('visible');if(window.askLeadership&&/^[abc]$/i.test(q)){window.askLeadership=false;const answers={a:'Speed may help once, but habitual overtime risks quality and burnout. First clarify what is truly urgent.',b:'This is a balanced response: clarify the business outcome, negotiate a smaller scope and protect quality.',c:'Protecting the team is important. Before declining, explore whether a smaller deliverable could still create value.'};bubble(answers[q.toLowerCase()]+'\n\nThis is an illustrative scenario, not a verified account of a specific event.','bot');cta('Try another scenario',leadership);return}window.askLeadership=false;const match=questions.find(x=>x.test.test(q));if(match){bubble(match.answer,'bot');cta(match.label,match.act)}else bubble('I can help you explore Chirag’s career, Ventura experience, leadership style, AI projects and design work. Try asking about one of those topics.','bot');if(typeof window.clarity==='function')window.clarity('event','portfolio_question_asked')}
+$('ask-compose').onsubmit=e=>{e.preventDefault();ask(input.value)};document.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>ask(b.dataset.ask));
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;const mic=$('ask-mic');if(!SR){mic.title='Speech recognition is not available in this browser';mic.disabled=true;mic.style.opacity='.4'}else{let recognition;mic.onclick=()=>{if(recognition){recognition.stop();return}recognition=new SR();recognition.lang='en-IN';recognition.interimResults=false;recognition.maxAlternatives=1;mic.classList.add('listening');recognition.onresult=e=>{const phrase=e.results[0][0].transcript;input.value=phrase;ask(phrase)};recognition.onerror=()=>bubble('I couldn’t hear that clearly. Please try again or type your question.','bot');recognition.onend=()=>{mic.classList.remove('listening');recognition=null};recognition.start()}};
+})();
+</script>
+<style id="genie-portfolio-polish">
+/* Keep the assistant above the bottom navigation rather than covering it. */
+#ask-launch{right:clamp(20px,2.6vw,48px)!important;bottom:72px!important;min-height:52px;padding:10px 18px 10px 11px!important;gap:10px!important;isolation:isolate;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important;box-shadow:0 14px 40px #0009,0 0 0 1px #e5a66e18!important}
+#ask-launch:hover{transform:translateY(-4px);box-shadow:0 20px 52px #000b,0 0 25px #e5a66e25!important;border-color:#e5a66e!important}
+#ask-launch .genie-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 35% 20%,#9d6e91,#51405b 60%,#2b2438);font-size:23px;box-shadow:inset 0 0 0 1px #f0b77a55;animation:genie-float 3.2s ease-in-out infinite}
+#ask-launch .genie-spark{color:#f6bf7f;animation:genie-twinkle 2s ease-in-out infinite}
+#ask-launch .genie-voice{opacity:.7;font-size:15px}
+#ask-sheet{bottom:138px!important;right:clamp(20px,2.6vw,48px)!important;max-height:min(70dvh,640px)!important;transform-origin:90% 100%;box-shadow:0 30px 90px #000c,0 0 45px #e5a66e14!important}
+#ask-sheet.visible{animation:genie-appear .4s cubic-bezier(.2,.8,.2,1) both!important}
+#ask-head{background:linear-gradient(105deg,#3c2d39,#27222d)}
+#ask-head .genie-avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:15px;background:#6e4b68;font-size:27px;flex-shrink:0;animation:genie-float 3s ease-in-out infinite}
+#ask-head .genie-heading{display:flex;align-items:center;gap:12px}
+#ask-head .genie-heading strong{font-size:16px}
+.ask-bubble{animation:genie-bubble .32s ease-out both!important}
+#ask-launch.genie-summoned{animation:genie-summon .65s cubic-bezier(.2,.9,.2,1) both}
+@keyframes genie-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes genie-twinkle{0%,100%{opacity:.45;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes genie-appear{from{opacity:0;transform:translateY(24px) scale(.92);filter:blur(5px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes genie-bubble{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes genie-summon{0%{opacity:0;transform:translateY(26px) scale(.55)}65%{opacity:1;transform:translateY(-9px) scale(1.09)}100%{transform:none}}
+/* Scratch-to-summon only on the map nameplate. Native links remain clickable. */
+#genie-scratch{position:relative;display:inline-block;margin-top:9px;width:185px;height:34px;border-radius:10px;overflow:hidden;border:1px solid #e5a66e66;background:#302631;cursor:crosshair;touch-action:none;user-select:none;box-shadow:0 4px 20px #0005}
+#genie-scratch .scratch-reveal{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;font:600 11px Inter,Arial,sans-serif;letter-spacing:.05em;color:#ffd5a7}
+#genie-scratch canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+#genie-scratch.summoned{border-color:#f6c188;box-shadow:0 0 26px #e5a66e55}
+#genie-scratch-note{font:9px Inter,Arial,sans-serif;letter-spacing:.08em;color:#d6bfa9;opacity:.8;margin-top:4px}
+@media(max-width:768px){#ask-launch{right:14px!important;bottom:82px!important;padding:9px 12px!important}#ask-launch .genie-icon{width:33px;height:33px}#ask-sheet{right:10px!important;bottom:145px!important;width:calc(100vw - 20px)!important;max-height:min(66dvh,570px)!important}#genie-scratch{width:150px;height:30px}}
+@media(prefers-reduced-motion:reduce){#ask-launch .genie-icon,#ask-launch .genie-spark,#ask-head .genie-avatar{animation:none!important}#ask-sheet.visible,.ask-bubble{animation:none!important}}
+</style>
+<script id="genie-portfolio-interactions">
+(function(){
+function ready(){
+ const launch=document.getElementById('ask-launch'),sheet=document.getElementById('ask-sheet'),head=document.querySelector('#ask-head > div');
+ if(!launch||!sheet)return;
+ launch.innerHTML='<span class="genie-icon" aria-hidden="true">🧞</span><span>Ask Chirag</span><span class="genie-spark" aria-hidden="true">✦</span><span class="genie-voice" aria-hidden="true">🎙</span>';
+ launch.setAttribute('aria-expanded','false');launch.setAttribute('aria-controls','ask-sheet');
+ if(head){head.classList.add('genie-heading');head.innerHTML='<span class="genie-avatar" aria-hidden="true">🧞</span><span><strong>Chirag’s Genie</strong><span style="display:block;font-size:11px;color:#cdb7a9">Your wish, a story · Ask by voice or text</span></span>'}
+ launch.addEventListener('click',()=>launch.setAttribute('aria-expanded',sheet.classList.contains('visible')?'true':'false'));
+ document.getElementById('ask-close')?.addEventListener('click',()=>launch.setAttribute('aria-expanded','false'));
+ // Add a small scratch card underneath the nameplate; never cover the name or the exit control.
+ const name=document.getElementById('nameplate');if(!name||document.getElementById('genie-scratch'))return;
+ const wrap=document.createElement('div');wrap.id='genie-scratch';wrap.setAttribute('role','button');wrap.setAttribute('tabindex','0');wrap.setAttribute('aria-label','Scratch the magic lamp to summon Chirag’s Genie');
+ wrap.innerHTML='<div class="scratch-reveal"><span style="font-size:20px">🪔</span> Genie unlocked!</div><canvas aria-hidden="true"></canvas>';
+ const note=document.createElement('div');note.id='genie-scratch-note';note.textContent='✦ SCRATCH TO SUMMON';
+ name.append(wrap,note);
+ const canvas=wrap.querySelector('canvas'),ctx=canvas.getContext('2d');const w=370,h=68;canvas.width=w;canvas.height=h;
+ function paint(){ctx.globalCompositeOperation='source-over';const grad=ctx.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#a87955');grad.addColorStop(.5,'#e2b17c');grad.addColorStop(1,'#7b5362');ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);ctx.fillStyle='#302329';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 22px Arial';ctx.fillText('✦  RUB THE LAMP  ✦',w/2,h/2);ctx.globalCompositeOperation='destination-out'}paint();
+ let down=false,strokes=0,done=false;
+ function summon(){if(done)return;done=true;wrap.classList.add('summoned');ctx.clearRect(0,0,w,h);note.textContent='✦ YOUR GENIE IS HERE';launch.classList.remove('genie-summoned');void launch.offsetWidth;launch.classList.add('genie-summoned');setTimeout(()=>{if(!sheet.classList.contains('visible'))launch.click()},520);if(typeof window.clarity==='function')window.clarity('event','genie_summoned')}
+ function scratch(e){if(!down||done)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*w/r.width,y=(e.clientY-r.top)*h/r.height;ctx.beginPath();ctx.arc(x,y,24,0,Math.PI*2);ctx.fill();if(++strokes>22)summon()}
+ canvas.addEventListener('pointerdown',e=>{down=true;canvas.setPointerCapture(e.pointerId);scratch(e)});
+ canvas.addEventListener('pointermove',scratch);
+ canvas.addEventListener('pointerup',()=>down=false);
+ canvas.addEventListener('pointercancel',()=>down=false);
+ wrap.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();summon()}});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
+})();
+</script>
+<style id="genie-unified-design">
+#genie-scratch,#genie-scratch-note{display:none!important}
+#ask-launch{width:64px!important;height:64px!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:50%!important;right:24px!important;bottom:72px!important;box-shadow:0 10px 36px #0009,0 0 0 5px rgba(225,160,110,.07)!important;animation:genieBreathe 3.8s ease-in-out infinite!important}
+#ask-launch>span:not(.genie-icon){display:none!important}#ask-launch .genie-icon{font-size:30px!important;line-height:1!important}
+@keyframes genieBreathe{0%,100%{transform:translateY(0);box-shadow:0 10px 36px #0009,0 0 0 5px #e1a06e10}50%{transform:translateY(-5px);box-shadow:0 15px 38px #0009,0 0 0 10px #e1a06e09}}
+#genie-tooltip{position:fixed;z-index:99989;right:96px;bottom:85px;background:#2c252b;color:#ffe5c7;border:1px solid #a77b5b;border-radius:12px;padding:11px 15px;font:500 12px Inter,Arial,sans-serif;box-shadow:0 12px 30px #0008;opacity:0;transform:translateX(8px);pointer-events:none;transition:opacity .35s,transform .35s;white-space:nowrap}
+#genie-tooltip.show{opacity:1;transform:translateX(0)}
+#genie-ritual{position:fixed;inset:0;z-index:100001;background:rgba(15,12,19,.78);backdrop-filter:blur(15px);display:none;align-items:center;justify-content:center;padding:20px}
+#genie-ritual.open{display:flex;animation:ritualIn .3s ease both}@keyframes ritualIn{from{opacity:0}to{opacity:1}}
+#genie-ritual-card{position:relative;width:min(460px,100%);border:1px solid #8c6658;border-radius:28px;background:radial-gradient(circle at 50% 35%,#493448,#211d27 75%);padding:32px 24px;text-align:center;box-shadow:0 35px 110px #000b;color:#fbe6d3}
+#genie-ritual-card h2{font:normal 32px Georgia,serif;margin:12px 0 8px}#genie-ritual-card p{font:13px/1.7 Inter,Arial,sans-serif;color:#d2b9aa;margin:0 0 20px}
+#genie-lamp{font-size:70px;filter:drop-shadow(0 0 20px #f6a85a60);user-select:none;touch-action:none;cursor:grab;display:inline-block;transition:transform .12s}
+#genie-lamp.rubbing{transform:rotate(-8deg) scale(1.12)}
+#genie-rub-track{height:7px;border-radius:8px;background:#ffffff20;overflow:hidden;margin:20px auto 10px;max-width:220px}#genie-rub-progress{width:0;height:100%;background:linear-gradient(90deg,#c78a6b,#ffe3a6);transition:width .12s}
+#genie-ritual-close{position:absolute;right:16px;top:14px;border:0;background:none;color:#f7d5bd;font-size:26px;cursor:pointer}
+#genie-ritual-card .genie-ritual-help{font-size:11px;letter-spacing:.09em;text-transform:uppercase}
+#genie-smoke{position:absolute;left:50%;top:30%;font-size:55px;opacity:0;pointer-events:none}#genie-smoke.burst{animation:smokeRise .85s ease-out both}@keyframes smokeRise{0%{opacity:0;transform:translate(-50%,25px) scale(.5)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,-130px) scale(2)}}
+#ask-sheet{width:min(460px,calc(100vw - 24px))!important;max-height:min(780px,calc(100dvh - 35px))!important;overflow:auto!important;right:18px!important;bottom:85px!important;z-index:100002!important}
+#genie-tabs{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid #ffffff20}#genie-tabs button{flex:1;border:1px solid #ffffff25;border-radius:10px;background:transparent;color:#d6bfb1;padding:11px 8px;cursor:pointer;font:600 12px Inter,Arial,sans-serif}#genie-tabs button.active{background:#b9866633;border-color:#cf9c76;color:#fff1e0}
+#genie-story{display:none;padding:16px 20px 24px;color:#f3e2d4;font:14px/1.75 Inter,Arial,sans-serif;max-height:55dvh;overflow:auto}#genie-story.active{display:block}#genie-story h3{font:normal 27px Georgia,serif;margin:4px 0 15px}#genie-story p{margin:0 0 15px}#genie-story .story-links a{display:inline-block;margin:6px 8px 0 0;padding:7px 10px;border:1px solid #ffffff30;border-radius:10px;color:#f6d4b7;text-decoration:none;font-size:12px}
+#ask-sheet.story-mode #ask-messages,#ask-sheet.story-mode #ask-suggestions,#ask-sheet.story-mode #ask-action,#ask-sheet.story-mode #ask-compose,#ask-sheet.story-mode #ask-note{display:none!important}
+@media(max-width:768px){#ask-launch{right:18px!important;bottom:84px!important;width:58px!important;height:58px!important}#genie-tooltip{right:83px;bottom:96px}#ask-sheet{right:12px!important;bottom:78px!important}}
+@media(prefers-reduced-motion:reduce){#ask-launch{animation:none!important}#genie-smoke.burst{animation:none}}
+</style><script id="genie-unified-interactions">
+(function(){function init(){
+const launch=document.getElementById('ask-launch'),sheet=document.getElementById('ask-sheet');if(!launch||!sheet)return;
+const old=document.getElementById('genie-scratch');if(old)old.remove();document.getElementById('genie-scratch-note')?.remove();
+launch.innerHTML='<span class="genie-icon" aria-hidden="true">🧞</span>';launch.setAttribute('aria-label','Summon Chirag’s Genie');launch.title='Ask me about Chirag';launch.onclick=null;
+const tip=document.createElement('div');tip.id='genie-tooltip';tip.textContent='✦ Ask me about Chirag';document.body.appendChild(tip);
+launch.addEventListener('mouseenter',()=>tip.classList.add('show'));
+launch.addEventListener('mouseleave',()=>tip.classList.remove('show'));
+launch.addEventListener('focus',()=>tip.classList.add('show'));
+launch.addEventListener('blur',()=>tip.classList.remove('show'));
+setTimeout(()=>{if(!sheet.classList.contains('visible')&&!launch.matches(':hover')){tip.classList.add('show');setTimeout(()=>{if(!launch.matches(':hover')&&!launch.matches(':focus'))tip.classList.remove('show')},2600)}},3000);
+const ritual=document.createElement('div');ritual.id='genie-ritual';ritual.setAttribute('role','dialog');ritual.setAttribute('aria-modal','true');ritual.setAttribute('aria-label','Summon the Genie');ritual.innerHTML='<div id="genie-ritual-card"><button id="genie-ritual-close" aria-label="Close">×</button><div style="font-size:11px;letter-spacing:.2em;color:#e4ae85">A LITTLE MAGIC</div><h2>Rub the lamp</h2><p>Every story starts with a little curiosity.<br>Rub the lamp to meet Chirag’s Genie.</p><div id="genie-lamp" role="button" tabindex="0" aria-label="Rub the magic lamp">🪔</div><div id="genie-smoke">✨🧞✨</div><div id="genie-rub-track"><div id="genie-rub-progress"></div></div><div class="genie-ritual-help">Swipe left and right over the lamp · or press Enter</div></div>';document.body.appendChild(ritual);
+let progress=0,lastX=null,down=false,finished=false;
+function reset(){progress=0;lastX=null;finished=false;document.getElementById('genie-rub-progress').style.width='0%'}
+function openRitual(){
+ tip.classList.remove('show');
+ if(sheet.classList.contains('visible')){sheet.classList.remove('visible');return;}
+ launch.classList.remove('genie-auto-rub');void launch.offsetWidth;launch.classList.add('genie-auto-rub');
+ launch.setAttribute('aria-busy','true');
+ setTimeout(()=>{launch.classList.remove('genie-auto-rub');launch.removeAttribute('aria-busy');sheet.classList.add('visible');document.getElementById('ask-input')?.focus();if(typeof window.clarity==='function')window.clarity('event','genie_summoned')},650);
+}
+function closeRitual(){ritual.classList.remove('open');}
+function summon(){if(finished)return;finished=true;document.getElementById('genie-rub-progress').style.width='100%';document.getElementById('genie-smoke').classList.add('burst');if(typeof window.clarity==='function')window.clarity('event','genie_summoned');setTimeout(()=>{closeRitual();sheet.classList.add('visible');document.getElementById('ask-input')?.focus();document.getElementById('genie-smoke').classList.remove('burst')},800)}
+const lamp=document.getElementById('genie-lamp');lamp.addEventListener('pointerdown',e=>{down=true;lastX=e.clientX;lamp.setPointerCapture(e.pointerId);lamp.classList.add('rubbing')});lamp.addEventListener('pointermove',e=>{if(!down||finished)return;let delta=Math.abs(e.clientX-lastX);lastX=e.clientX;progress=Math.min(100,progress+delta*.55);document.getElementById('genie-rub-progress').style.width=progress+'%';if(progress>=100)summon()});const stop=()=>{down=false;lastX=null;lamp.classList.remove('rubbing')};lamp.addEventListener('pointerup',stop);lamp.addEventListener('pointercancel',stop);lamp.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();progress=Math.min(100,progress+35);document.getElementById('genie-rub-progress').style.width=progress+'%';if(progress>=100)summon()}});
+launch.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openRitual()},true);
+document.getElementById('genie-ritual-close').onclick=closeRitual;ritual.addEventListener('click',e=>{if(e.target===ritual)closeRitual()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ritual.classList.contains('open'))closeRitual()});
+const tabs=document.createElement('div');tabs.id='genie-tabs';tabs.innerHTML='<button class="active" data-tab="ask">✦ Ask the Genie</button><button data-tab="story">📖 Chirag’s Story</button>';document.getElementById('ask-head').after(tabs);
+const story=document.createElement('article');story.id='genie-story';const original=document.getElementById('iam-overlay');const profile=document.getElementById('profile-card');
+const storyBody=original?.querySelector('.iam-story')||original;
+let text=storyBody?storyBody.innerText:'';
+// Preserve the full original about-page narrative rather than a rewritten summary.
+const paragraphs=Array.from(original?.querySelectorAll('p')||[]).map(p=>p.textContent.trim()).filter(Boolean);
+story.innerHTML='<div style="font-size:10px;letter-spacing:.17em;color:#d6a27c">THE PERSON BEHIND THE PINS</div><h3>Chirag’s story</h3>'+(paragraphs.length?paragraphs.map(t=>{const p=document.createElement('p');p.textContent=t;return p.outerHTML}).join(''):'')+'<h3>Connect with Chirag</h3>';
+const links=document.createElement('div');links.className='story-links';profile?.querySelectorAll('a[href]').forEach(a=>{const l=document.createElement('a');l.href=a.href;l.textContent=a.querySelector('.pc-link-label')?.textContent?.trim()||a.textContent.trim()||'Open';if(l.href.startsWith('http')){l.target='_blank';l.rel='noopener noreferrer'}links.appendChild(l)});story.appendChild(links);tabs.after(story);
+function setTab(tab){sheet.classList.toggle('story-mode',tab==='story');story.classList.toggle('active',tab==='story');tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab))}tabs.addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)setTab(b.dataset.tab)});
+// Nameplate and original About-Me entry points now open the unified Genie story.
+const name=document.getElementById('nameplate-inner');if(name){name.onclick=null;name.addEventListener('click',e=>{e.stopPropagation();openRitual();setTab('story')})}
+window.openChiragGenieStory=function(){sheet.classList.add('visible');setTab('story')};
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();})();
+</script>
+<style id="mobile-layout-and-single-story-fix">
+/* The biography lives in Genie only; the legacy overlay is retired. */
+#iam-overlay,#iam-press-ring,#profile-card{display:none!important;pointer-events:none!important}
+@media(max-width:768px){
+  #map,#map-ui{width:100vw!important;max-width:100vw!important;overflow:hidden!important}
+  #diorama-stage{left:50%!important;transform-origin:center center!important}
+  .diorama-marker .pin-label,.diorama-marker .marker-label{max-width:clamp(86px,23vw,130px)!important;min-width:0!important;white-space:normal!important;overflow-wrap:break-word!important;font-size:clamp(10px,2.3vw,12px)!important;line-height:1.15!important}
+  .diorama-marker.pin-marker{max-width:28vw!important}
+  #ask-sheet{position:fixed!important;left:env(safe-area-inset-left,0px)!important;right:env(safe-area-inset-right,0px)!important;top:env(safe-area-inset-top,0px)!important;bottom:env(safe-area-inset-bottom,0px)!important;width:auto!important;max-width:none!important;max-height:none!important;border-radius:0!important;transform:none!important;box-sizing:border-box!important}
+  #ask-sheet:not(.visible){pointer-events:none!important}
+  #ask-head{padding:14px 16px!important}
+  #genie-tabs{padding:8px 12px!important}
+  #genie-tabs button{padding:10px 6px!important;font-size:12px!important}
+  #ask-messages{min-height:0!important;overflow-y:auto!important}
+  #ask-compose{padding:10px 12px!important}
+  #action-bar{bottom:calc(64px + env(safe-area-inset-bottom,0px))!important;max-width:calc(100vw - 24px)!important;box-sizing:border-box!important}
+  #ask-launch{right:clamp(12px,4vw,22px)!important;bottom:calc(138px + env(safe-area-inset-bottom,0px))!important}
+}
+@media(max-width:420px){.diorama-marker .pin-label,.diorama-marker .marker-label{font-size:10px!important;max-width:92px!important}}
+</style>
+<script id="single-about-entrypoint-fix">
+(function(){
+function patch(){
+  if(typeof window.openIam==='function')window.openIam=function(){if(typeof window.openChiragGenieStory==='function')window.openChiragGenieStory()};
+  const name=document.getElementById('nameplate-inner');
+  if(name){name.onclick=null;name.style.cursor='pointer';}
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',patch);else patch();
+})();
+</script>
 </body>
 </html>
