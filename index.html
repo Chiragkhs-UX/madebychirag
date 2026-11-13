@@ -2820,6 +2820,7 @@ function openEdu() {
   showDeck('edu-deck');
 }
 function showDeck(id) {
+  document.querySelectorAll('.card-deck.show').forEach(function(d){if(d.id!==id)d.classList.remove('show');});
   activeDeck = id; window.activeDeck = id;
   document.getElementById('deck-backdrop').classList.add('show');
   document.getElementById(id).classList.add('show');
@@ -4452,5 +4453,83 @@ function patch(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',patch);else patch();
 })();
 </script>
+
+<!-- Responsive text-only floating navigation + expressive Genie -->
+<style id="portfolio-dock-20261113">
+#portfolio-dock{display:none!important;
+position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5500;max-width:min(94vw,790px);width:max-content;box-sizing:border-box;padding:6px;background:rgba(39,32,40,.95);border:1px solid rgba(226,167,113,.48);border-radius:999px;box-shadow:0 16px 45px rgba(0,0,0,.38);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);display:flex;gap:2px;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;scroll-snap-type:x proximity;touch-action:pan-x;}
+#portfolio-dock::-webkit-scrollbar{display:none}
+#portfolio-dock button{flex:0 0 auto;white-space:nowrap;scroll-snap-align:center;appearance:none;background:transparent;border:0;border-radius:999px;color:#f2e4d8;padding:12px clamp(12px,1.6vw,20px);font:600 clamp(12px,1vw,14px)/1.15 Inter,system-ui,sans-serif;cursor:pointer;transition:background .2s,color .2s,transform .2s}
+#portfolio-dock button:hover{background:rgba(229,166,110,.16)}
+#portfolio-dock button[aria-current="page"]{background:#dfa36e;color:#241d25}
+html body #ask-launch{position:fixed!important;right:clamp(18px,4vw,50px)!important;bottom:clamp(88px,10vh,116px)!important;z-index:5600!important;width:clamp(76px,7vw,102px)!important;height:clamp(76px,7vw,102px)!important;min-width:0!important;padding:0!important;border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;filter:drop-shadow(0 8px 13px rgba(0,0,0,.46));animation:genieFreeFloat 3.3s ease-in-out infinite!important;transition:filter .25s,scale .25s!important}
+html body #ask-launch:hover{scale:1.14;filter:drop-shadow(0 4px 20px rgba(229,166,110,.7))}
+html body #ask-launch .genie-icon,html body #ask-launch .genie-icon *{font-size:clamp(51px,5.5vw,76px)!important;background:transparent!important;border:0!important;box-shadow:none!important}
+@keyframes genieFreeFloat{0%,100%{translate:0 0}50%{translate:0 -9px}}
+#ask-sheet{z-index:6000!important}
+body:has(#ask-sheet.open) #portfolio-dock,body:has(#ask-sheet.open) #ask-launch{visibility:hidden!important;pointer-events:none!important}
+@media(max-width:768px){
+#action-bar{display:none!important}
+#portfolio-dock{display:flex!important;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));transform:none;width:auto;max-width:none;padding:5px;justify-content:flex-start}
+#portfolio-dock button{padding:12px 15px;font-size:13px}
+html body #ask-launch{right:16px!important;bottom:calc(84px + env(safe-area-inset-bottom))!important;width:82px!important;height:82px!important}
+html body #ask-launch .genie-icon,html body #ask-launch .genie-icon *{font-size:60px!important}
+#ask-sheet{bottom:calc(10px + env(safe-area-inset-bottom))!important;max-height:calc(100dvh - 20px - env(safe-area-inset-bottom))!important}
+}
+@media(max-width:420px){#portfolio-dock button{font-size:12px;padding:11px 13px}html body #ask-launch{width:72px!important;height:72px!important}}
+@media(prefers-reduced-motion:reduce){html body #ask-launch{animation:none!important}#portfolio-dock button{transition:none}}
+</style>
+<nav id="portfolio-dock" aria-label="Portfolio sections">
+<button type="button" data-dock="work">Selected Work</button>
+<button type="button" data-dock="charche">Chirag ke Charche</button>
+<button type="button" data-dock="memory">Memory Lane</button>
+<button type="button" data-dock="education">Education</button>
+<button type="button" data-dock="contact">Contact</button>
+</nav>
+<script id="portfolio-dock-behaviour">
+(function(){
+const dock=document.getElementById('portfolio-dock');if(!dock)return;
+const buttons=[...dock.querySelectorAll('[data-dock]')];
+const closeAll=()=>{document.querySelectorAll('.card-deck.show').forEach(d=>d.classList.remove('show'));document.getElementById('deck-backdrop')?.classList.remove('show');if(typeof activeDeck!=='undefined'){activeDeck=null;window.activeDeck=null;}if(typeof closePanel==='function')closePanel();};
+const commands={work:()=>window.openWork?.(),charche:()=>window.openCharche?.(),memory:()=>window.openMemory?.(),education:()=>window.openEdu?.(),contact:()=>{closeAll();document.querySelector('a[href^="mailto:"]')?.click()}};
+function select(btn){buttons.forEach(b=>b.removeAttribute('aria-current'));btn.setAttribute('aria-current','page');btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+dock.addEventListener('click',e=>{const btn=e.target.closest('[data-dock]');if(!btn)return;select(btn);commands[btn.dataset.dock]?.();});
+function sync(){const intro=document.getElementById('intro');const onIntro=intro&&!intro.classList.contains('gone');dock.classList.toggle('dock-off',!!onIntro);dock.setAttribute('aria-hidden',onIntro?'true':'false');dock.inert=!!onIntro;}
+const intro=document.getElementById('intro');if(intro)new MutationObserver(sync).observe(intro,{attributes:true,attributeFilter:['class','style']});sync();
+})();
+</script>
+
+<style id="portfolio-qa-fixes-20261113">
+/* Dock: no delayed reveal, visible as soon as intro is dismissed */
+#portfolio-dock{visibility:visible!important;opacity:1!important;pointer-events:auto!important;transition:none!important;z-index:6500!important}
+#portfolio-dock.dock-off{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+body:has(#ask-sheet.visible) #portfolio-dock,body:has(.card-deck.show) #portfolio-dock{visibility:hidden!important;pointer-events:none!important}
+/* Never allow multiple decks or their headers to visually stack. */
+.card-deck:not(.show){visibility:hidden!important;opacity:0!important;pointer-events:none!important;display:none!important}
+.card-deck.show{visibility:visible!important;opacity:1!important;display:flex!important;overflow:hidden!important;box-sizing:border-box!important;isolation:isolate}
+.card-deck.show .deck-header{flex:0 0 auto!important;margin:0!important;max-width:100%;box-sizing:border-box}
+.card-deck.show .deck-cards{flex:0 1 auto!important;min-height:0!important;max-height:100%!important}
+/* Always keep top card visible, remaining cards stacked discreetly underneath. */
+.card-deck.show .flip-card{max-width:100%;max-height:100%;}
+.card-deck.show .flip-card:not(:first-of-type){pointer-events:none}
+@media(max-width:768px){
+ .card-deck.show{padding:calc(env(safe-area-inset-top) + 64px) 16px calc(env(safe-area-inset-bottom) + 94px)!important;justify-content:center!important;gap:clamp(12px,2vh,22px)!important;min-height:0!important;height:100dvh!important}
+ .card-deck.show .deck-header{padding:0 44px!important;margin:0!important;flex-shrink:0!important}
+ .card-deck.show .deck-title{font-size:clamp(23px,6vw,32px)!important;line-height:1.15!important}
+ .card-deck.show .deck-sub{font-size:9px!important;line-height:1.5!important;margin-top:5px!important}
+ .card-deck.show .deck-tabs{margin-top:9px!important;max-width:100%!important;justify-content:center!important}
+ .card-deck.show .deck-cards{width:min(390px,82vw)!important;height:min(360px,44dvh)!important;flex-shrink:1!important;margin:0 auto!important}
+ .card-deck.show .deck-cards .flip-card{border-radius:16px!important}
+ .card-deck.show .deck-cards .flip-card:nth-child(n+5){visibility:hidden!important}
+ .card-deck.show .deck-cards .flip-card:nth-child(2){transform:translateY(5px) scale(.985)!important}
+ .card-deck.show .deck-cards .flip-card:nth-child(3){transform:translateY(10px) scale(.97)!important}
+ .card-deck.show .deck-cards .flip-card:nth-child(4){transform:translateY(15px) scale(.955)!important}
+ .card-deck.show .deck-cards .flip-card.flipped{transform:rotateY(180deg)!important}
+ #portfolio-dock{bottom:max(14px,env(safe-area-inset-bottom))!important;left:12px!important;right:12px!important;max-width:none!important;min-height:54px!important;display:flex!important;visibility:visible!important}
+ #portfolio-dock.dock-off{visibility:hidden!important}
+ #portfolio-dock button{font-size:13px!important;min-height:44px!important}
+}
+@media(max-width:390px){.card-deck.show{padding-top:70px!important;padding-bottom:76px!important}.card-deck.show .deck-cards{height:min(310px,42dvh)!important}}
+</style>
 </body>
 </html>
