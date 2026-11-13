@@ -4531,5 +4531,197 @@ body:has(#ask-sheet.visible) #portfolio-dock,body:has(.card-deck.show) #portfoli
 }
 @media(max-width:390px){.card-deck.show{padding-top:70px!important;padding-bottom:76px!important}.card-deck.show .deck-cards{height:min(310px,42dvh)!important}}
 </style>
+
+<style id="mobile-editorial-sheet-20261113">
+@media(max-width:768px){
+ #work-deck.card-deck.show{position:fixed!important;inset:0!important;z-index:7500!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:calc(env(safe-area-inset-top) + 20px) 14px calc(env(safe-area-inset-bottom) + 20px)!important;background:rgba(15,13,16,.52)!important;overflow:hidden!important}
+ #work-deck .deck-header,#work-deck .deck-cards,#work-deck .deck-hint{display:none!important}
+ #mobile-work-sheet{width:min(100%,530px);height:min(82dvh,760px);min-height:0;background:#f9f6f0;color:#19283a;border-radius:28px;box-shadow:0 22px 85px rgba(0,0,0,.45);display:flex;flex-direction:column;overflow:hidden;position:relative;isolation:isolate}
+ #mobile-work-sheet *{box-sizing:border-box}
+ .mws-head{flex:none;padding:23px 23px 16px;position:relative;background:#f9f6f0}
+ .mws-kicker{font:600 10px/1.4 var(--mono,monospace);letter-spacing:.16em;text-transform:uppercase;color:#a36b47;margin-bottom:8px}
+ .mws-title{font:400 clamp(29px,7.5vw,39px)/1.05 var(--serif,Georgia,serif);color:#1d2733;margin:0 50px 13px 0}
+ .mws-close{position:absolute;top:20px;right:19px;width:43px;height:43px;border:0;border-radius:50%;background:#ebe8e3;color:#19283a;font-size:24px;display:grid;place-items:center;cursor:pointer}
+ .mws-tabs{display:flex;gap:8px}
+ .mws-tab{border:1px solid #ddd6cd;border-radius:22px;padding:9px 15px;font:600 12px/1.3 system-ui,sans-serif;background:transparent;color:#5b6470;cursor:pointer}
+ .mws-tab.active{background:#202e42;color:#fff;border-color:#202e42}
+ .mws-scroll{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:7px 22px 25px;scrollbar-width:thin}
+ .mws-project{padding:20px 0;border-bottom:1px solid #e5ded6}
+ .mws-project:last-child{border:0}
+ .mws-co{font:600 10px/1.5 var(--mono,monospace);letter-spacing:.12em;text-transform:uppercase;color:#a16c4b;margin-bottom:8px}
+ .mws-project h3{font:500 clamp(21px,5.4vw,27px)/1.2 var(--serif,Georgia,serif);color:#1c293a;margin:0 0 10px}
+ .mws-project p{font:400 14px/1.65 system-ui,sans-serif;color:#566275;margin:0 0 14px}
+ .mws-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:15px}
+ .mws-tags span{border-radius:16px;padding:5px 9px;background:#efe8e0;color:#76533c;font:500 10px/1.3 system-ui,sans-serif}
+ .mws-link{display:inline-flex;align-items:center;gap:10px;color:#15283d;text-decoration:none;font:700 13px/1.3 system-ui,sans-serif;border-bottom:1px solid #15283d;padding:0 0 5px}
+ .mws-foot{flex:none;padding:12px 20px calc(12px + env(safe-area-inset-bottom));background:#f9f6f0;border-top:1px solid #e6e0d8;color:#7a7780;font:500 11px/1.4 system-ui,sans-serif;text-align:center}
+ /* Other content decks: keep one legible card, no stacked duplicate silhouettes */
+ .card-deck.show:not(#work-deck){padding:calc(env(safe-area-inset-top) + 44px) 18px calc(env(safe-area-inset-bottom) + 55px)!important;gap:12px!important}
+ .card-deck.show:not(#work-deck) .deck-cards{width:min(380px,88vw)!important;height:min(360px,48dvh)!important}
+ .card-deck.show:not(#work-deck) .deck-cards .flip-card:nth-child(n+2){opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+ .card-deck.show:not(#work-deck) .deck-header{width:100%;padding:0 45px!important}
+ .card-deck.show:not(#work-deck) .deck-hint{margin-top:0!important}
+}
+@media(min-width:769px){#mobile-work-sheet{display:none!important}}
+</style>
+<script id="mobile-editorial-sheet-js">
+(function(){
+ const deck=document.getElementById('work-deck');if(!deck)return;
+ const sheet=document.createElement('div');sheet.id='mobile-work-sheet';sheet.setAttribute('role','dialog');sheet.setAttribute('aria-label','Selected Work');sheet.innerHTML='<div class="mws-head"><div class="mws-kicker">Portfolio · Selected projects</div><h2 class="mws-title">Selected Work</h2><button class="mws-close" type="button" aria-label="Close selected work">×</button><div class="mws-tabs"><button class="mws-tab active" data-type="cs">Case Studies</button><button class="mws-tab" data-type="sp">Side Projects</button></div></div><div class="mws-scroll" id="mws-list"></div><div class="mws-foot">Explore the projects · Scroll to discover more</div>';
+ deck.appendChild(sheet);
+ const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function render(type){
+  sheet.querySelectorAll('.mws-tab').forEach(b=>b.classList.toggle('active',b.dataset.type===type));
+  const data=(window.work_data||[]).filter(d=>type==='sp'?d.type==='side-project':d.type!=='side-project');
+  document.getElementById('mws-list').innerHTML=data.map(d=>'<article class="mws-project"><div class="mws-co">'+esc(d.co)+'</div><h3>'+esc(d.title)+'</h3><p>'+esc(d.desc)+'</p><div class="mws-tags">'+(d.tags||[]).map(t=>'<span>'+esc(t)+'</span>').join('')+'</div>'+(d.link?'<a class="mws-link" href="'+esc(d.link)+'" target="_blank" rel="noopener noreferrer">View '+(type==='sp'?'project':'case study')+' <span aria-hidden="true">↗</span></a>':'')+'</article>').join('');
+  document.getElementById('mws-list').scrollTop=0;
+ }
+ sheet.querySelector('.mws-close').addEventListener('click',()=>window.closeDeck('work-deck'));
+ sheet.querySelectorAll('.mws-tab').forEach(b=>b.addEventListener('click',()=>render(b.dataset.type)));
+ const oldOpenWork=window.openWork,oldOpenSide=window.openSideProjects,oldSwitch=window.switchWorkTab;
+ window.openWork=function(){if(matchMedia('(max-width:768px)').matches){render('cs');window.showDeck('work-deck')}else oldOpenWork()};
+ window.openSideProjects=function(){if(matchMedia('(max-width:768px)').matches){render('sp');window.showDeck('work-deck')}else oldOpenSide()};
+ window.switchWorkTab=function(type){if(matchMedia('(max-width:768px)').matches){render(type)}else oldSwitch(type)};
+})();
+</script>
+
+<style id="selected-work-responsive-modal-v2">
+/* One editorial Selected Work sheet across desktop and mobile. */
+#work-deck.card-deck.show{
+ position:fixed!important;inset:0!important;z-index:7500!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ padding:clamp(12px,3vh,30px) clamp(12px,3vw,32px)!important;
+ background:rgba(13,11,15,.67)!important;overflow:hidden!important;
+ transform:none!important;opacity:1!important;visibility:visible!important;
+}
+#work-deck .deck-header,#work-deck .deck-cards,#work-deck .deck-hint,
+#work-deck .deck-nav,#work-deck .deck-dots{display:none!important}
+#work-deck #mobile-work-sheet{
+ display:flex!important;position:relative!important;isolation:isolate!important;
+ width:min(100%,660px)!important;height:min(70dvh,660px)!important;
+ max-height:calc(100dvh - 36px)!important;min-height:0!important;
+ border-radius:24px!important;overflow:hidden!important;
+ background:#f9f6f0!important;color:#19283a!important;
+ box-shadow:0 25px 100px rgba(0,0,0,.55)!important;
+ flex-direction:column!important;
+}
+#work-deck .mws-head{padding:clamp(17px,2.5vh,26px) clamp(18px,3vw,30px) 12px!important}
+#work-deck .mws-title{font-size:clamp(29px,3vw,39px)!important;margin-bottom:12px!important}
+#work-deck .mws-scroll{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;
+ overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;
+ padding:4px clamp(18px,3vw,30px) 20px!important;overscroll-behavior:contain!important}
+#work-deck .mws-project{padding:17px 0!important}
+#work-deck .mws-foot{padding:9px 16px!important}
+#work-deck .mws-close{z-index:4!important}
+@media(max-width:768px){
+ #work-deck.card-deck.show{padding:calc(env(safe-area-inset-top) + 12px) 14px calc(env(safe-area-inset-bottom) + 12px)!important}
+ #work-deck #mobile-work-sheet{width:100%!important;height:min(76dvh,650px)!important;max-height:calc(100dvh - 40px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;border-radius:25px!important}
+ #work-deck .mws-head{padding:19px 19px 12px!important}
+ #work-deck .mws-scroll{padding:3px 19px 16px!important}
+ #work-deck .mws-project h3{font-size:clamp(20px,5.2vw,25px)!important}
+ #work-deck .mws-project p{font-size:14px!important;line-height:1.55!important}
+}
+@media(max-height:620px){#work-deck #mobile-work-sheet{height:min(85dvh,520px)!important}}
+</style>
+<script id="selected-work-responsive-modal-v2-js">
+(function(){
+ const sheet=document.getElementById('mobile-work-sheet');
+ const deck=document.getElementById('work-deck');
+ if(!sheet||!deck)return;
+ // Render the same editorial list on desktop too, without changing project data.
+ function renderAll(type){
+  sheet.querySelectorAll('.mws-tab').forEach(b=>b.classList.toggle('active',b.dataset.type===type));
+  const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const data=(window.work_data||[]).filter(d=>type==='sp'?d.type==='side-project':d.type!=='side-project');
+  const list=sheet.querySelector('#mws-list');
+  list.innerHTML=data.map(d=>'<article class="mws-project"><div class="mws-co">'+esc(d.co)+'</div><h3>'+esc(d.title)+'</h3><p>'+esc(d.desc)+'</p><div class="mws-tags">'+(d.tags||[]).map(t=>'<span>'+esc(t)+'</span>').join('')+'</div>'+(d.link?'<a class="mws-link" href="'+esc(d.link)+'" target="_blank" rel="noopener noreferrer">View '+(type==='sp'?'project':'case study')+' ↗</a>':'')+'</article>').join('');
+  list.scrollTop=0;
+ }
+ sheet.querySelectorAll('.mws-tab').forEach(b=>b.addEventListener('click',()=>renderAll(b.dataset.type)));
+ const previousShow=window.showDeck;
+ window.showDeck=function(id){if(id==='work-deck'){renderAll(sheet.querySelector('.mws-tab.active')?.dataset.type||'cs')}return previousShow.apply(this,arguments)};
+ const previousOpenWork=window.openWork;
+ window.openWork=function(){renderAll('cs');return previousOpenWork.apply(this,arguments)};
+ const previousOpenSide=window.openSideProjects;
+ window.openSideProjects=function(){renderAll('sp');return previousOpenSide.apply(this,arguments)};
+})();
+</script>
+<style id="qa-unified-editorial-v3">
+/* Replace brittle card stacks with one shared, responsive editorial surface. */
+.card-deck,.card-deck.show,#deck-backdrop,#mobile-work-sheet{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#qa-overlay{position:fixed;inset:0;z-index:99980;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(13,12,17,.76);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);box-sizing:border-box}
+#qa-overlay.open{display:flex}
+#qa-overlay *{box-sizing:border-box}
+#qa-modal{position:relative;display:flex;flex-direction:column;width:min(620px,100%);height:min(680px,78dvh);max-height:calc(100dvh - 40px);background:#faf6f0;color:#1b2939;border-radius:26px;overflow:hidden;box-shadow:0 26px 90px rgba(0,0,0,.5);font-family:Inter,system-ui,sans-serif;cursor:default}
+#qa-header{flex:none;padding:26px 30px 18px;border-bottom:1px solid #e9e1d8}
+#qa-kicker{font:600 11px/1.4 monospace;letter-spacing:.15em;text-transform:uppercase;color:#a46c4b;margin-bottom:8px}
+#qa-title{font:400 clamp(29px,4vw,38px)/1.14 Georgia,serif;margin:0 58px 15px 0;color:#19283a}
+#qa-close{position:absolute;top:22px;right:24px;width:44px;height:44px;border:0;border-radius:50%;background:#eee9e3;color:#19283a;font:26px/1 system-ui;cursor:pointer;display:grid;place-items:center;z-index:2}
+#qa-close:hover{background:#e2d8ce}
+#qa-tabs{display:flex;flex-wrap:wrap;gap:8px}
+#qa-tabs:empty{display:none}
+#qa-tabs button{border:1px solid #ded6cc;border-radius:100px;padding:10px 17px;background:transparent;color:#566175;font:600 13px system-ui;cursor:pointer}
+#qa-tabs button.active{background:#203047;border-color:#203047;color:#fff}
+#qa-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:6px 30px 25px;scrollbar-width:thin;touch-action:pan-y}
+.qa-item{padding:23px 0;border-bottom:1px solid #e4dcd2}
+.qa-item:last-child{border-bottom:0}
+.qa-meta{font:600 11px/1.5 monospace;letter-spacing:.11em;text-transform:uppercase;color:#aa7452;margin-bottom:9px}
+.qa-item h3{font:400 clamp(22px,3vw,28px)/1.22 Georgia,serif;color:#1b2939;margin:0 0 12px}
+.qa-item p{font:400 clamp(14px,1.5vw,16px)/1.65 Inter,system-ui,sans-serif;color:#586477;margin:0 0 12px;white-space:pre-line}
+.qa-tags{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0}
+.qa-tags span{background:#efe8df;border-radius:100px;padding:6px 10px;color:#79573f;font:500 12px system-ui}
+.qa-link{display:inline-flex;color:#1c2d40;font:700 14px system-ui;text-decoration:none;border-bottom:1px solid currentColor;padding:4px 0;margin-top:7px;cursor:pointer}
+.qa-link:hover{color:#a66b42}
+#qa-footer{flex:none;border-top:1px solid #e8e0d8;padding:12px 20px;text-align:center;color:#777984;font:500 12px system-ui;background:#faf6f0}
+body.qa-modal-open{overflow:hidden}
+body.qa-modal-open #ask-launch,body.qa-modal-open #portfolio-dock{visibility:hidden!important;pointer-events:none!important}
+body.qa-modal-open #car-cursor,body.qa-modal-open #car,body.qa-modal-open #cursor-car{display:none!important}
+#qa-overlay,#qa-overlay *{cursor:auto!important}
+#qa-overlay button,#qa-overlay a{cursor:pointer!important}
+@media(max-width:768px){#qa-overlay{padding:12px;align-items:center}#qa-modal{width:100%;height:min(620px,74dvh);max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));border-radius:25px}#qa-header{padding:19px 20px 15px}#qa-title{font-size:clamp(28px,7.5vw,35px);margin-right:46px}#qa-close{top:16px;right:16px;width:43px;height:43px}#qa-scroll{padding:4px 20px 18px}.qa-item{padding:19px 0}.qa-item h3{font-size:clamp(21px,5.5vw,26px)}.qa-item p{font-size:14px;line-height:1.55}#qa-footer{padding:10px 12px}}
+@media(max-height:600px){#qa-modal{height:calc(100dvh - 24px)}#qa-header{padding-top:12px;padding-bottom:10px}#qa-title{margin-bottom:8px}#qa-close{top:10px}}
+</style>
+<div id="qa-overlay" aria-hidden="true"><section id="qa-modal" role="dialog" aria-modal="true" aria-labelledby="qa-title"><header id="qa-header"><div id="qa-kicker">Portfolio · Explore</div><h2 id="qa-title"></h2><button id="qa-close" type="button" aria-label="Close section">×</button><nav id="qa-tabs" aria-label="Content categories"></nav></header><main id="qa-scroll" tabindex="0"></main><footer id="qa-footer">Scroll to explore more</footer></section></div>
+<script id="qa-unified-editorial-js">
+(function(){
+ const overlay=document.getElementById('qa-overlay'),scroll=document.getElementById('qa-scroll'),title=document.getElementById('qa-title'),tabs=document.getElementById('qa-tabs');
+ if(!overlay)return;
+ const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const tags=a=>Array.isArray(a)&&a.length?'<div class="qa-tags">'+a.map(t=>'<span>'+esc(t)+'</span>').join('')+'</div>':'';
+ let current='',subtype='cs',previousFocus=null;
+ function dataFor(which){
+  if(which==='work')return (window.work_data||[]).filter(d=>subtype==='sp'?d.type==='side-project':d.type!=='side-project');
+  if(which==='memory')return window.memory_data||[];
+  if(which==='edu')return window.edu_data||[];
+  if(which==='charche')return [...(window.reco_data||[]),...(window.charche_data||[])];
+  return [];
+ }
+ function card(d,which){
+  let meta='',name='',description='',link='';
+  if(which==='work'){meta=d.co;name=d.title;description=d.desc;if(d.link&&/^https:\/\//.test(d.link))link='<a class="qa-link" target="_blank" rel="noopener noreferrer" href="'+esc(d.link)+'">View '+(subtype==='sp'?'project':'case study')+' ↗</a>';}
+  else if(which==='memory'){meta=[d.year,d.place].filter(Boolean).join(' · ');name=d.title;description=d.text||d.body||d.note||d.desc||'';if(d.photo&&/^https:\/\//.test(d.photo))link='<img loading="lazy" alt="'+esc(d.title)+'" src="'+esc(d.photo)+'" style="display:block;width:100%;max-height:260px;object-fit:cover;border-radius:14px;margin-top:12px">';}
+  else if(which==='edu'){meta=[d.inst,d.period].filter(Boolean).join(' · ');name=d.degree;description=[d.spec,d.note].filter(Boolean).join('\n\n');}
+  else {meta=d.rel||d.cat||'Chirag ke Charche';name=d.name||d.title;description=d.quote||d.body||'';if(d.role)meta+=' · '+d.role;}
+  return '<article class="qa-item"><div class="qa-meta">'+esc(meta)+'</div><h3>'+esc(name)+'</h3><p>'+esc(description)+'</p>'+tags(d.tags)+link+'</article>';
+ }
+ function render(){
+  const names={work:'Selected Work',charche:'Charche & Colleagues',memory:'Memory Lane',edu:'Education & Learning'};
+  title.textContent=names[current]||'Explore';
+  tabs.innerHTML=current==='work'?'<button type="button" data-qa-tab="cs" class="'+(subtype==='cs'?'active':'')+'">Case Studies</button><button type="button" data-qa-tab="sp" class="'+(subtype==='sp'?'active':'')+'">Side Projects</button>':'';
+  const data=dataFor(current);
+  scroll.innerHTML=data.length?data.map(d=>card(d,current)).join(''):'<p style="padding:30px 0;color:#586477">No content available in this section yet.</p>';
+  scroll.scrollTop=0;
+ }
+ function open(which,type){previousFocus=document.activeElement;current=which;subtype=type||'cs';render();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('qa-modal-open');document.querySelectorAll('.card-deck.show').forEach(el=>el.classList.remove('show'));document.getElementById('deck-backdrop')?.classList.remove('show');document.getElementById('qa-close').focus();}
+ function close(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');document.body.classList.remove('qa-modal-open');current='';if(previousFocus&&previousFocus.isConnected)previousFocus.focus();}
+ window.openWork=()=>open('work','cs');window.openSideProjects=()=>open('work','sp');window.switchWorkTab=t=>open('work',t);window.openMemory=()=>open('memory');window.openEdu=()=>open('edu');window.openCharche=()=>open('charche');window.openCombined=()=>open('charche');window.openReco=()=>open('charche');
+ window.showDeck=id=>{const kind={'work-deck':'work','charche-deck':'charche','memory-deck':'memory','edu-deck':'edu'}[id];if(kind)open(kind,kind==='work'?subtype:undefined)};
+ const oldClose=window.closeDeck;window.closeDeck=id=>{if(current)close();else if(typeof oldClose==='function')oldClose(id)};
+ document.getElementById('qa-close').addEventListener('click',close);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+ tabs.addEventListener('click',e=>{const b=e.target.closest('[data-qa-tab]');if(b){subtype=b.dataset.qaTab;render()}});
+ document.addEventListener('keydown',e=>{if(!current)return;if(e.key==='Escape'){e.stopImmediatePropagation();close()}if(e.key==='Tab'){const nodes=[...overlay.querySelectorAll('button,a,[tabindex="0"]')].filter(n=>n.getClientRects().length);if(nodes.length){const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}},true);
+})();
+</script>
 </body>
 </html>
