@@ -2159,6 +2159,23 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(max-height:680px) and (min-width:641px){#ask-sheet{bottom:12px!important;height:calc(100dvh - 24px)!important;max-height:calc(100dvh - 24px)!important}#ask-suggestions{max-height:58px}#ask-head{min-height:52px;padding:8px 14px!important}#ask-note{display:none}}
 @media(max-height:540px){#ask-sheet{top:6px!important;bottom:6px!important;height:calc(100dvh - 12px)!important;max-height:calc(100dvh - 12px)!important}#ask-suggestions{max-height:42px}#ask-note{display:none}}
 </style>
+
+<style id="visual-polish-20261113">
+/* Preserve original source pixels: remove stacked sepia and screen washes. */
+#diorama-art,#mobile-diorama-art{filter:saturate(1.17) contrast(1.085) brightness(1.055)!important;image-rendering:auto!important;}
+#diorama-stage::after{background:linear-gradient(180deg,rgba(245,169,116,.055),transparent 44%,rgba(30,21,31,.035))!important;mix-blend-mode:normal!important;}
+#map-vignette{background:radial-gradient(ellipse at 50% 48%,transparent 52%,rgba(24,19,28,.18) 100%)!important;pointer-events:none!important;}
+/* A floating glassy copper-to-peach dock, restricted to mobile. */
+#portfolio-dock{display:none!important;}
+@media(max-width:768px){
+ #portfolio-dock{display:flex!important;left:clamp(12px,4vw,24px)!important;right:clamp(12px,4vw,24px)!important;width:auto!important;max-width:none!important;bottom:max(12px,env(safe-area-inset-bottom))!important;transform:none!important;padding:6px!important;gap:4px!important;overflow-x:auto!important;overflow-y:hidden!important;border:1px solid rgba(255,218,180,.62)!important;background:linear-gradient(112deg,rgba(249,206,176,.95) 0%,rgba(236,181,155,.95) 42%,rgba(201,143,138,.95) 100%)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.68),0 3px 8px rgba(34,18,27,.20),0 18px 42px rgba(28,17,27,.38)!important;backdrop-filter:blur(18px) saturate(1.15)!important;-webkit-backdrop-filter:blur(18px) saturate(1.15)!important;scrollbar-width:none!important;}
+ #portfolio-dock::before{content:"";position:absolute;top:1px;left:22px;right:22px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);pointer-events:none;}
+ #portfolio-dock button{color:#3c2a30!important;font-weight:650!important;font-size:clamp(12px,3.2vw,14px)!important;padding:clamp(12px,3vw,15px) clamp(15px,4vw,20px)!important;}
+ #portfolio-dock button:hover{background:rgba(255,255,255,.30)!important;}
+ #portfolio-dock button[aria-current="page"]{background:#302833!important;color:#fff4eb!important;box-shadow:0 3px 10px rgba(40,26,36,.22)!important;}
+}
+@media(max-width:768px) and (prefers-reduced-transparency:reduce){#portfolio-dock{background:#efbca6!important;}}
+</style>
 </head>
 <body>
 <div id="cur"></div>
