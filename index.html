@@ -2176,6 +2176,16 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 @media(max-width:768px) and (prefers-reduced-transparency:reduce){#portfolio-dock{background:#efbca6!important;}}
 </style>
+<style id="resume-primary-dock-20261113">
+@media(max-width:768px){
+ #portfolio-dock{align-items:center!important;scroll-padding-inline:8px!important;background:linear-gradient(110deg,rgba(255,230,218,.97),rgba(244,207,181,.97) 52%,rgba(224,176,158,.97))!important;}
+ #portfolio-dock button,#portfolio-dock button[aria-current="page"]{background:transparent!important;color:#4e4249!important;box-shadow:none!important;border:0!important;border-radius:999px!important;white-space:nowrap!important;flex:0 0 auto!important;}
+ #portfolio-dock button:focus-visible,#portfolio-dock .dock-resume:focus-visible{outline:2px solid #26354a!important;outline-offset:2px!important;}
+ #portfolio-dock .dock-resume{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;flex:0 0 auto!important;white-space:nowrap!important;border-radius:999px!important;background:#1d2d45!important;color:#fff8f0!important;text-decoration:none!important;font:700 clamp(13px,3.4vw,15px)/1.2 Inter,system-ui,sans-serif!important;padding:clamp(13px,3.1vw,16px) clamp(17px,4.5vw,23px)!important;box-shadow:0 4px 14px rgba(21,34,51,.28),inset 0 1px rgba(255,255,255,.17)!important;}
+ #portfolio-dock .dock-resume span{font-size:1.15em!important;}
+}
+@media(min-width:769px){#portfolio-dock .dock-resume{display:none!important}}
+</style>
 </head>
 <body>
 <div id="cur"></div>
@@ -4502,6 +4512,7 @@ html body #ask-launch .genie-icon,html body #ask-launch .genie-icon *{font-size:
 <button type="button" data-dock="memory">Memory Lane</button>
 <button type="button" data-dock="education">Education</button>
 <button type="button" data-dock="contact">Contact</button>
+<a class="dock-resume" href="https://drive.google.com/file/d/1LQ6oY_eAVAqkgZdmeJHdtWN_D4VSLat8/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View resume in a new tab">Resume <span aria-hidden="true">↗</span></a>
 </nav>
 <script id="portfolio-dock-behaviour">
 (function(){
@@ -4509,7 +4520,7 @@ const dock=document.getElementById('portfolio-dock');if(!dock)return;
 const buttons=[...dock.querySelectorAll('[data-dock]')];
 const closeAll=()=>{document.querySelectorAll('.card-deck.show').forEach(d=>d.classList.remove('show'));document.getElementById('deck-backdrop')?.classList.remove('show');if(typeof activeDeck!=='undefined'){activeDeck=null;window.activeDeck=null;}if(typeof closePanel==='function')closePanel();};
 const commands={work:()=>window.openWork?.(),charche:()=>window.openCharche?.(),memory:()=>window.openMemory?.(),education:()=>window.openEdu?.(),contact:()=>{closeAll();document.querySelector('a[href^="mailto:"]')?.click()}};
-function select(btn){buttons.forEach(b=>b.removeAttribute('aria-current'));btn.setAttribute('aria-current','page');btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+function select(btn){btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'nearest'});}
 dock.addEventListener('click',e=>{const btn=e.target.closest('[data-dock]');if(!btn)return;select(btn);commands[btn.dataset.dock]?.();});
 function sync(){const intro=document.getElementById('intro');const onIntro=intro&&!intro.classList.contains('gone');dock.classList.toggle('dock-off',!!onIntro);dock.setAttribute('aria-hidden',onIntro?'true':'false');dock.inert=!!onIntro;}
 const intro=document.getElementById('intro');if(intro)new MutationObserver(sync).observe(intro,{attributes:true,attributeFilter:['class','style']});sync();
