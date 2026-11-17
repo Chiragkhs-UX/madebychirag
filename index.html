@@ -4883,36 +4883,7 @@ body.portfolio-panel-open #portfolio-pin-hit-layer,body.qa-modal-open #portfolio
  schedule();
 })();
 </script>
-<script id="natural-scroll-controller">
-(function(){
- const intro=document.getElementById('intro');
- const section=document.getElementById('natural-scroll-map-section');
- if(!intro||!section)return;
- let activated=false;
- function activateMap(){
-  if(activated)return;
-  if(typeof enterPortfolio!=='function'){console.error('Portfolio map unavailable');return;}
-  activated=true;
-  try{enterPortfolio()}catch(err){activated=false;console.error(err)}
- }
- function update(){
-  const threshold=Math.max(100,intro.offsetHeight*.72);
-  if(window.scrollY>=threshold && !activated) { /* defer activation until the scroll settles so mobile does not jump */ window.requestAnimationFrame(()=>{if(window.scrollY>=threshold)activateMap();}); }
-  const ui=document.getElementById('map-ui');
-  if(ui){const onMap=window.scrollY>=threshold;ui.style.pointerEvents=onMap?'auto':'none';}
- }
- function goMap(){
-  activateMap();
-  section.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
- }
- const go=document.getElementById('cr-enter'),skip=document.getElementById('cr-skip');
- if(go)go.addEventListener('click',goMap);
- if(skip)skip.addEventListener('click',goMap);
- window.addEventListener('scroll',update,{passive:true});
- window.addEventListener('resize',update,{passive:true});
- update();
-})();
-</script><style id="first-scroll-jump-fix-final">
+<style id="first-scroll-jump-fix-final">
 /* Final cascade override: older intro styles re-applied position:fixed later in the document.
    Keep the intro in normal document flow even after enterPortfolio adds .gone. */
 html,body{scroll-behavior:smooth!important;overflow-y:auto!important;overflow-x:hidden!important;height:auto!important;min-height:100%!important}
@@ -4938,5 +4909,67 @@ body #map{position:fixed!important;inset:0!important}
  body #intro .cr-scene,body #intro .cr-map,body #intro .cr-map-img,body #intro .cr-vignette{pointer-events:none!important}
  body #natural-scroll-map-section{touch-action:pan-y!important}
 }
+</style><style id="mobile-map-scroll-snap-style">
+/* Emphasize the opening line without competing with the main heading. */
+#intro .cr-kicker{font-size:clamp(24px,2.55vw,43px)!important;font-weight:600!important;line-height:1.2!important;letter-spacing:-.025em!important;color:#f4e7d9!important;text-shadow:0 3px 22px #0008!important}
+@media(max-width:768px){
+ #intro .cr-kicker{font-size:clamp(25px,6.5vw,37px)!important;line-height:1.18!important;margin-bottom:16px!important}
+ /* Keep touch scrolling native and allow snapping only after the gesture ends. */
+ html,body{scroll-snap-type:none!important;overscroll-behavior-y:auto!important}
+ #intro.cinematic-intro{touch-action:pan-y!important}
+}
+</style><script id="mobile-map-scroll-snap-controller">
+(function(){
+ const intro=document.getElementById('intro'),section=document.getElementById('natural-scroll-map-section');
+ if(!intro||!section)return;
+ let activated=false,gesture=false,settleTimer=0,snapping=false,finished=false;
+ const mobile=()=>matchMedia('(max-width: 768px) and (pointer: coarse)').matches;
+ const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const destination=()=>Math.round(section.getBoundingClientRect().top+window.scrollY);
+ function activate(){
+   if(activated)return;
+   if(typeof enterPortfolio!=='function'){console.error('Map activation unavailable');return}
+   activated=true;
+   try{enterPortfolio()}catch(e){activated=false;console.error(e)}
+ }
+ function setMapInteractivity(){
+   const ui=document.getElementById('map-ui');
+   if(!ui)return;
+   // Never allow invisible map overlays to steal gestures while intro remains visible.
+   const atMap=window.scrollY>=destination()-4;
+   ui.style.pointerEvents=atMap?'auto':'none';
+ }
+ function finishScroll(){
+   if(!mobile()||snapping||gesture)return;
+   const target=destination(),y=window.scrollY;
+   if(y<50 || y>=target-3){setMapInteractivity();return}
+   // When user is going toward map, finish the movement to the actual map boundary.
+   if(y>=Math.min(130,target*.18)){
+     snapping=true;activate();
+     window.scrollTo({top:target,behavior:reduced()?'instant':'smooth'});
+     window.setTimeout(()=>{snapping=false;setMapInteractivity()},reduced()?50:650);
+   }
+ }
+ function update(){
+   const target=destination();
+   if(window.scrollY>=Math.min(target*.72,target-10))activate();
+   setMapInteractivity();
+   if(mobile()&&!snapping&&!gesture){clearTimeout(settleTimer);settleTimer=setTimeout(finishScroll,140)}
+ }
+ function go(){activate();window.scrollTo({top:destination(),behavior:reduced()?'instant':'smooth'})}
+ document.getElementById('cr-enter')?.addEventListener('click',go);
+ document.getElementById('cr-skip')?.addEventListener('click',go);
+ intro.addEventListener('touchstart',()=>{gesture=true;clearTimeout(settleTimer)},{passive:true});
+ document.addEventListener('touchend',()=>{gesture=false;clearTimeout(settleTimer);settleTimer=setTimeout(finishScroll,230)},{passive:true});
+ document.addEventListener('touchcancel',()=>{gesture=false},{passive:true});
+ window.addEventListener('scroll',update,{passive:true});
+ window.addEventListener('resize',update,{passive:true});
+ update();
+})();
+</script><style id="original-map-framing-override">/* Preserve the full original map composition: no camera crop, enlargement or drifting. */
+body #intro .cr-map{inset:0!important;transform:none!important;animation:none!important;background-size:contain!important;background-position:center!important;filter:brightness(.61) saturate(.9)!important;}
+body #intro .cr-map-img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center center!important;transform:none!important;animation:none!important;}
+body #intro .cr-scene{background:#0c0b0b!important;}
+@media(max-width:700px){body #intro .cr-map-img{object-fit:contain!important;}}
 </style></body>
 </html>
